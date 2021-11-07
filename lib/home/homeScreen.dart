@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -75,7 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
         inactiveColorPrimary: Colors.white,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.notifications),
+        icon: Badge(
+            badgeContent: Text(''),
+            child: Icon(Icons.notifications)
+        ),
         title: ("Notification"),
         activeColorPrimary: Colors.white,
         inactiveColorPrimary: Colors.white,

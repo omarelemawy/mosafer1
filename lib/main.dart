@@ -1,8 +1,8 @@
-import 'package:country_code_picker/country_localizations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mosafer1/login/first_screen.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'login/more_register_info.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         primaryColor: HexColor("#8F9F83"),
       ),
       debugShowCheckedModeBanner: false,
-      home: FirstScreen()
+      home: MoreRegisterInfo()
     );
   }
 }
