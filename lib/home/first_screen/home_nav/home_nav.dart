@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mosafer1/Travel/TravelDetails.dart';
 import 'package:mosafer1/home/first_screen/home_nav/cubit/home_cubit.dart';
 import 'package:mosafer1/home/first_screen/home_nav/cubit/home_state.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 import '../drawer.dart';
 
@@ -184,21 +186,22 @@ class _HomeNavState extends State<HomeNav> {
                                       SizedBox(width: 10,),
                                       Image.asset("assets/icon_home.png"),
                                       Spacer(),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 1.0,horizontal: 6) ,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
-                                        child: Row(
-                                         mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(allRequestsSe[index].service.categorieName,style:
-                                            TextStyle(fontFamily: "beIN",fontSize: 14),),
-                                            Icon(Icons.chevron_right),
-                                          ],
-                                        ),
-                                      ),
+                                      ElevatedButton(onPressed: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> TravelDetailsPage(requestServices: allRequestsSe[index],)));
+                                      },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Colors.white),
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                                          )
+                                          , child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(allRequestsSe[index].service.categorieName,style:
+                                          TextStyle(fontFamily: "beIN",fontSize: 14,color: MyTheme.mainAppColor),),
+                                          Icon(Icons.chevron_right,color: MyTheme.mainAppColor,),
+                                        ],
+                                      ))
+                                     ,
                                       SizedBox(width: 10,),
                                     ],
                                   ),

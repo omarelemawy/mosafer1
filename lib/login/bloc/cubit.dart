@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mosafer1/home/homeScreen.dart';
+import 'package:mosafer1/home/BottomNavigation/homeScreen.dart';
 import 'package:mosafer1/login/bloc/state.dart';
 import 'package:http/http.dart'as http;
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
@@ -22,14 +22,22 @@ class LoginBloc extends Cubit<LoginStates>{
 
     if (response.statusCode == 200) {
       emit(LoginSuccessState());
+      print(response.body);
       var data = jsonDecode(response.body);
-      var token = data['msg']['token'];
-      print(token);
-      CacheHelper.saveData(key: 'token', value: token);
-      CacheHelper.saveData(key: 'email', value: email);
-      Navigator.pushAndRemoveUntil(
-          context, MaterialPageRoute(builder: (context) =>
-       HomeScreen()), (context) => false);
+      if(data["status"]){
+        var token = data["msg"]["token"];
+        var id = data["msg"]["id"];
+        print(token);
+        CacheHelper.saveData(key: 'token', value: token);
+        CacheHelper.saveData(key: 'email', value: email);
+        CacheHelper.saveData(key: 'id', value: id);
+        Navigator.pushAndRemoveUntil(
+            context, MaterialPageRoute(builder: (context) =>
+            HomeScreen()), (context) => false);
+      }else{
+        emit(LoginErrorState(data["msg"]));
+      }
+
     } else
     {
       print(response.body);

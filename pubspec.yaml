@@ -43,6 +43,24 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   file_picker: ^3.0.4
   country_code_picker: ^2.0.2
+  sliding_up_panel:
+  font_awesome_flutter:
+  marquee:
+  speed_dial_fab:
+  firebase_core:
+  cloud_firestore:
+  timeago:
+  intl:
+  firebase_storage:
+  image_picker:
+  syncfusion_flutter_maps:
+  uuid:
+  google_maps_flutter:
+  geocoder:
+  location:
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

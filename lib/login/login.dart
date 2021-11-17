@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mosafer1/home/BottomNavigation/homeScreen.dart';
 import 'package:mosafer1/login/bloc/state.dart';
 import 'package:mosafer1/login/sign_up.dart';
 import 'bloc/cubit.dart';
@@ -12,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context)=>LoginBloc(),
+      create: (context) => LoginBloc(),
       child: BlocConsumer<LoginBloc,LoginStates>(
         listener:(context,state){} ,
         builder: (context,state){
@@ -41,38 +42,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      SizedBox(height: 40,),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text("WellCome",style:
-                            TextStyle(
-                                fontFamily: "beIN",
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
-                            ),),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text("Skip",style:
-                            TextStyle(
-                                fontFamily: "beIN",
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                decoration:TextDecoration.underline
-                               ),
-                             ),
-                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+
                   Container(
                     width: double.infinity,
                     child: Column(
@@ -171,7 +141,45 @@ class LoginScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(height: 40,),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text("WellCome",style:
+                            TextStyle(
+                                fontFamily: "beIN",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                            ),),
+                          ),
+                          Spacer(),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: TextButton(
+                                onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                                  print("Tapped");
+                                },
+                                child: Text("Skip",style:
+                                TextStyle(
+                                    fontFamily: "beIN",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    decoration:TextDecoration.underline
+                                ),
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               )
           );

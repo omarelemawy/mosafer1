@@ -1,3 +1,3 @@
 abstract class MyTripsStates{}
 
-class InitialChatStates extends MyTripsStates{}
+class InitialMyTripsStates extends MyTripsStates{}
