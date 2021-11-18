@@ -46,7 +46,9 @@ dependencies:
   pin_code_text_field:
   badges: ^2.0.1
   country_list_pick: ^1.0.1+5
-
+  grouped_buttons: ^1.0.4
+  country_state_city_pro: ^0.0.3
+  intl: ^0.17.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

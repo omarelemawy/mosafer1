@@ -453,7 +453,7 @@ class MoreRegisterInfo extends StatelessWidget {
                                     }
                                   },
                                   child: Text(
-                                      "Create"
+                                      "Send"
                                       ,style: TextStyle(
                                       fontFamily: "beIN",
                                       fontSize: 14,

@@ -16,11 +16,10 @@ class HomeCubit extends Cubit<HomeStates>{
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         emit(GetSuccessAllRequestServicesStates());
-        print(response.body);
+
         return GetAllRequestServicesModel.fromJson(json);
       } else {
         final json = jsonDecode(response.body);
-        print(response.body);
         emit(GetErrorAllRequestServicesStates(json['msg']));
       }
 

@@ -30,7 +30,7 @@ class LoginBloc extends Cubit<LoginStates>{
       var token = data['msg']['token'];
       print(token);
       CacheHelper.saveData(key: 'token', value: token);
-      CacheHelper.saveData(key: 'email', value: email);
+
       Navigator.pushAndRemoveUntil(
           context, MaterialPageRoute(builder: (context) =>
        HomeScreen()), (context) => false);
@@ -92,10 +92,10 @@ class LoginBloc extends Cubit<LoginStates>{
     request.fields.addAll(postBody);
     http.StreamedResponse response = await request.send();
     response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
       var data = jsonDecode(value);
       if (data["status"] == true) {
-        data = jsonDecode(value);
-        print(data);
+        print(value);
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
             (context)=>VerificationMessage(email))
             , (route) => false);
@@ -103,7 +103,6 @@ class LoginBloc extends Cubit<LoginStates>{
       }
       else {
         print(response.statusCode);
-        data = jsonDecode(value);
         print(data["msg"]);
         emit(RegisterErrorState(data["msg"]));
       }

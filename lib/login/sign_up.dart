@@ -15,6 +15,7 @@ class SignUp extends StatelessWidget {
   TextEditingController phoneController=TextEditingController();
   TextEditingController nameController=TextEditingController();
   TextEditingController passController=TextEditingController();
+   String replaceAll="966";
    TextEditingController passCheckController = TextEditingController();
    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
    final GlobalKey<ScaffoldState> keyScaffold = GlobalKey<ScaffoldState>();
@@ -34,7 +35,12 @@ class SignUp extends StatelessWidget {
     return BlocProvider(
         create: (context)=>LoginBloc(),
         child: BlocConsumer<LoginBloc,LoginStates>(
-          listener:(context,state){} ,
+          listener:(context,state){
+            if(state is RegisterErrorState)
+            {
+              keyScaffold.currentState.showSnackBar(SnackBar(content: Text(state.error))) ;
+            }
+          } ,
           builder: (context,state){
             return Scaffold(
                 key:keyScaffold,
@@ -317,6 +323,7 @@ class SignUp extends StatelessWidget {
                                         if (_formKey.currentState
                                             .validate() &&
                                             _file != null) {
+                                          print(replaceAll);
                                           LoginBloc.get(context)
                                               .uploadFile(
                                               _file,
@@ -327,7 +334,7 @@ class SignUp extends StatelessWidget {
                                               passController.text,
                                               LoginBloc.get(context).character
                                                   == SingingCharacter.Male? "0" : "1",
-                                              _onCountryChange.toString()
+                                              replaceAll
                                           );
                                         } else {
                                           keyScaffold.currentState
@@ -387,9 +394,9 @@ class SignUp extends StatelessWidget {
     );
   }
 
-   String _onCountryChange(CountryCode countryCode) {
+   void _onCountryChange(CountryCode countryCode) {
      //TODO : manipulate the selected country code here
      print(countryCode.toString().replaceAll(new RegExp(r'[^\w\s]+'),''));
-     return countryCode.toString().replaceAll(new RegExp(r'[^\w\s]+'),'');
+      replaceAll = countryCode.toString().replaceAll(new RegExp(r'[^\w\s]+'),'');
    }
 }

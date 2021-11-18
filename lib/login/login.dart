@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/login/bloc/state.dart';
 import 'package:mosafer1/login/sign_up.dart';
 import 'bloc/cubit.dart';
@@ -35,43 +36,12 @@ class LoginScreen extends StatelessWidget {
                         width: double.infinity,
                         height: double.infinity,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(120),topLeft:  Radius.circular(120)),
+                            borderRadius: BorderRadius.only(topRight:
+                            Radius.circular(120),topLeft:  Radius.circular(120)),
                             color: Colors.white
                         ),
                       ),
                     ),
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(height: 40,),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text("WellCome",style:
-                            TextStyle(
-                                fontFamily: "beIN",
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
-                            ),),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text("Skip",style:
-                            TextStyle(
-                                fontFamily: "beIN",
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                decoration:TextDecoration.underline
-                               ),
-                             ),
-                           ),
-                        ],
-                      ),
-                    ],
                   ),
                   Container(
                     width: double.infinity,
@@ -93,7 +63,45 @@ class LoginScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: 200,),
+                          Column(
+                            children: [
+                              SizedBox(height: 50,),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                    child: Text("WellCome",style:
+                                    TextStyle(
+                                        fontFamily: "beIN",
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white
+                                    ),),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()
+                                        ), (route) => false);
+                                      },
+                                      child: Text("Skip",style:
+                                      TextStyle(
+                                          fontFamily: "beIN",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          decoration:TextDecoration.underline
+                                      ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 100,),
                           Text("دخول المسافرين",
                             style: TextStyle(
                                 fontFamily: "beIN",

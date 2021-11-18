@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,9 +17,9 @@ class FirstScreen extends StatelessWidget {
       {
     if(CacheHelper.getData(key: "token")!=null)
     {
-      widget = LoginScreen();
+      widget = HomeScreen();
       }else{
-       widget =LoginScreen();
+       widget =HomeScreen();
       }
        }else {
        widget = OnBoardingScreen();

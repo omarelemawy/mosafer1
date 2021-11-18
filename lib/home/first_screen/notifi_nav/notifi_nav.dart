@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../drawer.dart';
+import '../../drawer/drawer.dart';
 
 class NotifiNav extends StatelessWidget {
   const NotifiNav({Key key}) : super(key: key);
@@ -8,11 +8,6 @@ class NotifiNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:  MyDrawer(),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("الاشعارات",style: TextStyle(fontFamily: "beIN"),),
-      ),
-    );
+        );
   }
 }

@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
-import 'login/more_register_info.dart';
+import 'login/first_screen.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,12 +18,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
         theme: ThemeData(
         primaryColor: HexColor("#8F9F83"),
       ),
       debugShowCheckedModeBanner: false,
-      home: MoreRegisterInfo()
+      home: FirstScreen()
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../drawer.dart';
+import '../../drawer/drawer.dart';
 
 class ChatNav extends StatelessWidget {
   const ChatNav({Key key}) : super(key: key);
@@ -8,11 +8,7 @@ class ChatNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:  MyDrawer(),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("المحادثات",style: TextStyle(fontFamily: "beIN"),),
-      ),
+
     );
   }
 }
