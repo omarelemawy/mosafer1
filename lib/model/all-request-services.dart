@@ -1,16 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:mosafer1/shared/Utils.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 class GetAllRequestServicesModel {
   bool status;
   String errNum;
   String msg;
-  Data data;
-
+  var data;
+  var dataObj;
   GetAllRequestServicesModel({this.status, this.errNum, this.msg, this.data});
 
   GetAllRequestServicesModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     errNum = json['errNum'];
     msg = json['msg'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    try{
+      data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    }catch(e){
+      print("Data not valid");
+    }
+    dataObj = json['data'] != null ? json['data'] : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -18,9 +28,7 @@ class GetAllRequestServicesModel {
     data['status'] = this.status;
     data['errNum'] = this.errNum;
     data['msg'] = this.msg;
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
+    data['data'] = this.data;
     return data;
   }
 }
@@ -302,6 +310,9 @@ class User {
     updatedAt = json['updated_at'];
   }
 
+
+  User.forChat(this.id, this.name, this.photo, this.idPhoto, this.email);
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
@@ -415,5 +426,143 @@ class Links {
     data['label'] = this.label;
     data['active'] = this.active;
     return data;
+  }
+}
+
+class Message {
+  String message;
+  String messageImage;
+  GeoPoint messageLocation;
+  User user;
+  MessageType messageType;
+  bool isCurrentUser;
+  String time;
+  bool seen;
+
+  Message({this.message, this.messageImage,this.messageType,this.user, this.isCurrentUser,this.time,this.seen,this.messageLocation});
+
+  factory Message.fromMap(QueryDocumentSnapshot map) {
+    return Message(
+        seen: map["seen"],
+        time: timeago.format(map["time"].toDate()),
+        message: map["messageText"],
+        messageLocation: map['messageLocation'] != null ? map['messageLocation']  : null,
+        messageImage: map["messageImage"],
+        messageType: _getMessageType(map["messageType "]),
+        isCurrentUser: true,
+        user: User.forChat(
+            map["userInfo"]["userId"],
+            map["userInfo"]["userName"],
+            map["userInfo"]["image"],
+            map["userInfo"]["image"],
+            map["userInfo"]["image"])
+    );
+  }
+
+  static List<Message> toList(QuerySnapshot data) => data.docs.map((chatMap) => Message.fromMap(chatMap)).toList();
+
+  Map<String, dynamic> toMap(){
+    return {
+      "messageText" : message,
+      "messageImage" : messageImage,
+      "messageLocation" : messageLocation,
+      "time" : Timestamp.now(),
+      "seen" : false,
+      "messageType " : _getMessageTypeString(),
+      "userInfo" : {
+        "userName" : user.name,
+        "image" : user.photo,
+        "userId" : user.id,
+      }
+    };
+  }
+
+  String _getMessageTypeString() {
+    if(messageType != null){
+      return messageType.stringify();
+    }else{
+      if(messageImage.isNotEmpty && message.isEmpty) {
+        return "ImageMessage";
+      }else if(messageImage.isNotEmpty && message.isNotEmpty){
+        return "ImageMessage";
+      } else if(messageImage.isEmpty && message.isEmpty){
+        return "MapMessage";
+      }
+    }
+    return "TextMessage";
+  }
+  static MessageType _getMessageType(String type) {
+    print(MessageType.values[0].toString().split('.').last);
+    return MessageType.values.firstWhere((element) => element.toString().split('.').last == type);
+  }
+}
+
+class Notifications {
+  int id;
+  String title;
+  String subject;
+  String time;
+  String type;
+  bool seen;
+  Notifications({this.id, this.title, this.subject, this.time, this.type,this.seen});
+
+  factory Notifications.fromMap(Map map) {
+    return Notifications(
+        seen : false,
+        time: timeago.format(DateTime.parse(map["created_at"])),
+        id: map["id"],
+        subject: map["subject"],
+        title: map["title"],
+        type: map["type"]
+    );
+  }
+
+  static List<Notifications> toList(List data) => data.map((map) => Notifications.fromMap(map)).toList();
+}
+class ChatRoom {
+  int id;
+  Message lastMessage;
+  User mosafer;
+  User client;
+
+  ChatRoom({this.id, this.lastMessage,this.mosafer,this.client,});
+
+  factory ChatRoom.fromMap(Map map) {
+    return ChatRoom(
+      id: map["id"],
+      lastMessage: Message(message: "",user: User.forChat(1, "name", "photo", "idPhoto", "email")),
+      client: User.fromJson(map["user"]),
+    );
+  }
+
+  static List<ChatRoom> toList(List data) => data.map((chatRoomMap) => ChatRoom.fromMap(chatRoomMap)).toList();
+}
+
+class FatorahService {
+  String serviceName;
+  String servicePrice;
+  FatorahService(this.serviceName, this.servicePrice);
+}
+
+enum MessageType {
+  TextMessage,
+  ImageMessage,
+  TextImageMessage,
+  MapMessage,
+  Complaint,
+  Reset,
+}
+
+extension ToString on MessageType {
+  String stringify(){
+    switch(this){
+      case MessageType.Reset : return 'Reset';
+      case MessageType.TextMessage : return 'TextMessage';
+      case MessageType.ImageMessage: return 'ImageMessage';
+      case MessageType.TextImageMessage: return 'TextImageMessage';
+      case MessageType.MapMessage: return 'MapMessage';
+      case MessageType.Complaint: return 'Complaint';
+    }
+    return "TextMessage";
   }
 }

@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Number Of Trips"),
+                        Text("Number Of Trips",style: TextStyle(color: Colors.black),),
                         Container(
                           padding: EdgeInsets.all(10),
                           decoration:BoxDecoration(
@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                             shape: BoxShape.circle
                           ),
                             child: Text("0")),
-                        Text("Negative points"),
+                        Text("Negative points",style: TextStyle(color: Colors.black)),
                         Container(
                             padding: EdgeInsets.all(10),
                             decoration:BoxDecoration(
@@ -87,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                                 shape: BoxShape.circle
                             ),
                             child: Text("0")),
-                        Text("Bargains"),
+                        Text("Bargains",style: TextStyle(color: Colors.black)),
                         Container(
                             padding: EdgeInsets.all(10),
                             decoration:BoxDecoration(
@@ -140,7 +140,7 @@ class ProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          Image.asset("assets/attach_money_black_24dp.png"),
+                          Image.asset("assets/attach_money_black_24dp.png",errorBuilder: (context, error, stackTrace) => Container()),
                           SizedBox(width: 10,),
                           Text("Charge your account",style: TextStyle(color: HexColor("#5787A6")),),
                           Spacer(),
@@ -157,7 +157,7 @@ class ProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          Image.asset("assets/Group 1343.png"),
+                          Image.asset("assets/Group 1343.png",errorBuilder: (context, error, stackTrace) => Container()),
                           SizedBox(width: 10,),
                           Text("Balance withdrawal",style: TextStyle(color: HexColor("#5787A6")),),
                           Spacer(),
@@ -174,7 +174,7 @@ class ProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          Image.asset("assets/request_quote_black_24dp.png"),
+                          Image.asset("assets/request_quote_black_24dp.png",errorBuilder: (context, error, stackTrace) => Container()),
                           SizedBox(width: 10,),
                           Text("Financial Operations",style: TextStyle(color: HexColor("#5787A6")),),
                           Spacer(),
@@ -191,7 +191,7 @@ class ProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          Image.asset("assets/edit_note_black_24dp.png"),
+                          Image.asset("assets/edit_note_black_24dp.png",errorBuilder: (context, error, stackTrace) => Container(),),
                           SizedBox(width: 10,),
                           Text("Edit comments",style: TextStyle(color: HexColor("#5787A6")),),
                           Spacer(),

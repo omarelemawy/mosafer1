@@ -1,14 +1,29 @@
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mosafer1/Fatorah/bloc/cubit.dart';
+import 'package:mosafer1/home/BottomNavigation/bloc/bloc_chat.dart';
+import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
+import 'package:mosafer1/home/first_screen/notifi_nav/bloc/bloc_notifi.dart';
+import 'package:mosafer1/login/first_screen.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
-import 'login/first_screen.dart';
-
+import 'package:mosafer1/shared/styles/thems.dart';
 
 void main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await CacheHelper.init();
-  runApp(const MyApp());
+
+  runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatBloc>(create: (context) => ChatBloc(),),
+        BlocProvider<BottomNavigationBloc>(create: (context) => BottomNavigationBloc(),),
+        BlocProvider<FatorahCubit>(create: (context) => FatorahCubit(),),
+        BlocProvider<NotifiBloc>(create: (context) => NotifiBloc(),),
+      ],
+      child: MyApp()
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -18,11 +33,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-        primaryColor: HexColor("#8F9F83"),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: FirstScreen()
+        theme: MyTheme.themeLight(),
+        debugShowCheckedModeBanner: false,
+        home: FirstScreen()
     );
   }
 }

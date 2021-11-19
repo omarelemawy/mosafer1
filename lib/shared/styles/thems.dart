@@ -2,55 +2,55 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 class MyTheme {
+
+  static const Color mainAppColor = Color(0xFF8F9F83);
+  static const Color mainAppColorBright = Color(0xFFBDDBA6);
+  static const Color mainAppBlueColor = Color(0xFF5787A6);
+  static const MaterialColor mainAppSwatchColor = const MaterialColor(
+    0xFF004685,
+    const <int, Color>{
+      50: const Color(0xFF8F9F83),
+      100: const Color(0xFF8F9F83),
+      200: const Color(0xFF8F9F83),
+      300: const Color(0xFF8F9F83),
+      400: const Color(0xFF8F9F83),
+      500: const Color(0xFF8F9F83),
+      600: const Color(0xFF8F9F83),
+      700: const Color(0xFF8F9F83),
+      800: const Color(0xFF8F9F83),
+      900: const Color(0xFF8F9F83),
+    },
+  );
+
  static ThemeData themeLight() =>
       ThemeData(
-        primarySwatch: Colors.indigo,
-        iconTheme: const IconThemeData(
-            color: Colors.black
-        ),
+        primaryColor: mainAppColor,
+        primarySwatch: mainAppSwatchColor,
         scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-            backwardsCompatibility: false,
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            iconTheme: IconThemeData(
-                color: Colors.black
-            ),
-            color: Colors.white,
-            elevation: 0.0,
-            titleTextStyle: TextStyle(color: Colors.black87,
-                fontSize: 20,
-                fontWeight: FontWeight.bold)
-        ),
+        fontFamily: "beIN",
         textTheme: const TextTheme(
           headline1: TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
+            fontSize: 16
           ),
           bodyText1: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold
+              color: Colors.white,
+              fontSize: 16,
+
           ),
           bodyText2: TextStyle(
+            color: mainAppColor,
+            fontSize: 14,
+          ),
+          button: TextStyle(color: Colors.white,fontSize: 14),
+          overline: TextStyle(color: Colors.red,fontSize: 14),
+          subtitle1: TextStyle(
             color: Colors.grey,
             fontSize: 14,
           ),
-          subtitle1: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-          ),
-        ),
-        bottomNavigationBarTheme: const
-        BottomNavigationBarThemeData(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.indigo,
-            elevation: 20,
-            backgroundColor: Colors.white,
-            unselectedItemColor: Colors.grey
         ),
       );
 
@@ -102,4 +102,14 @@ class MyTheme {
               color: Colors.white, opacity: 1
           )
       );
+
+ static ThemeData defaultAppTextTheme() => ThemeData(
+   fontFamily: "beIN",
+   textTheme: TextTheme(
+     button: TextStyle(color: Colors.white,fontSize: 14),
+     overline: TextStyle(color: Colors.red,fontSize: 14),
+     headline1: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),
+     headline2: TextStyle(color: Colors.white,fontSize: 20)
+   )
+ ) ;
 }

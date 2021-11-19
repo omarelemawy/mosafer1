@@ -98,11 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   List<Widget> _buildScreens(context) {
     return [
-      ChatNav(),
+      ChatNav(context),
       MyTripsNav(context),
-      HomeNav(),
+      HomeNav(context),
       AddTrip(context),
-      NotifiNav(),
+      NotifiNav(context),
     ];
   }
 

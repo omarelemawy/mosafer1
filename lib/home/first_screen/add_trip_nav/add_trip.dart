@@ -28,6 +28,7 @@ class AddTrip extends StatelessWidget {
         builder: (context, state) {
           return  CacheHelper.getData(key: "token")==null?
           Scaffold(
+
             body: Container(
               width: double.infinity,
               height: double.infinity,

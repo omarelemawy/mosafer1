@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mosafer1/home/drawer/drawer.dart';
 
 import 'package:mosafer1/home/first_screen/my_trips/bloc/state_my_trips.dart';
 import 'package:mosafer1/login/login.dart';
@@ -22,6 +23,7 @@ class MyTripsNav extends StatelessWidget {
           List<Trips> allMyTrips = MyTripsBloc.get(context).allMyTrips;
           return CacheHelper.getData(key: "token")==null?
           Scaffold(
+
             body: Container(
               width: double.infinity,
               height: double.infinity,

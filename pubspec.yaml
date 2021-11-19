@@ -37,6 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_bloc: ^7.1.0
+  image_picker:
   bloc: ^7.0.0
   http:
   flutter_svg:
@@ -48,7 +49,26 @@ dependencies:
   country_list_pick: ^1.0.1+5
   grouped_buttons: ^1.0.4
   country_state_city_pro: ^0.0.3
-  intl: ^0.17.0
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  sliding_up_panel:
+  font_awesome_flutter:
+  marquee:
+  speed_dial_fab:
+  firebase_core:
+  cloud_firestore:
+  timeago:
+  intl:
+  firebase_storage:
+  syncfusion_flutter_maps:
+  uuid:
+  google_maps_flutter:
+  geocoder:
+  location:
+  flutter_localizations:
+    sdk: flutter
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
