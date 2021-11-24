@@ -17,7 +17,7 @@ class LoginBloc extends Cubit<LoginStates>{
   SingingCharacter character = SingingCharacter.Male;
   Future loginUser(context,email,pass) async {
     emit(LoginLoadingState());
-    var APIURL = Uri.parse('https://msafr.we-work.pro/api/masafr/login');
+    var APIURL = Uri.parse('https://msafr.we-work.pro/api/user/login');
     Map mapData = {
       'phone': email,
       'password': pass,
@@ -28,8 +28,15 @@ class LoginBloc extends Cubit<LoginStates>{
       emit(LoginSuccessState());
       var data = jsonDecode(response.body);
       var token = data['msg']['token'];
-      print(token);
+      var id = data['msg']['id'];
+      var name = data['msg']['name'];
+      var photo = data['msg']['photo'];
+
+      print("User : Token $token , id $id ");
       CacheHelper.saveData(key: 'token', value: token);
+      CacheHelper.saveData(key: 'id', value: id);
+      CacheHelper.saveData(key: 'name', value: name);
+      CacheHelper.saveData(key: 'photo', value: photo);
 
       Navigator.pushAndRemoveUntil(
           context, MaterialPageRoute(builder: (context) =>

@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/drawer/profile_page.dart';
 import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 class MyDrawer extends StatelessWidget {
 
@@ -15,7 +16,7 @@ class MyDrawer extends StatelessWidget {
           Container(
             height: 200,
             decoration:BoxDecoration(
-              color:  HexColor("#638462"),
+              color:  MyTheme.mainAppBlueColor,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,12 +39,12 @@ class MyDrawer extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10,),
-                Icon(Icons.home,color: HexColor("#638462"),),
+                Icon(Icons.home,color:  MyTheme.mainAppBlueColor,),
                 SizedBox(width: 10,),
-                Text("الصفحه الرئيسية",style: TextStyle(color: HexColor("#638462"),
+                Text("الصفحه الرئيسية",style: TextStyle(color:  MyTheme.mainAppBlueColor,
                     fontWeight: FontWeight.bold,fontSize: 18),),
                 Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
               ],
             ),
           ),
@@ -56,12 +57,12 @@ class MyDrawer extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10,),
-                Icon(Icons.person,color: HexColor("#638462"),),
+                Icon(Icons.person,color:  MyTheme.mainAppBlueColor,),
                 SizedBox(width: 10,),
-                Text("الصفحةالشخصية",style: TextStyle(color: HexColor("#638462"),
+                Text("الصفحةالشخصية",style: TextStyle(color:  MyTheme.mainAppBlueColor,
                     fontWeight: FontWeight.bold,fontSize: 18),),
                 Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
               ],
             ),
           ),
@@ -74,12 +75,12 @@ class MyDrawer extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10,),
-                Icon(Icons.mail_outline,color: HexColor("#638462"),),
+                Icon(Icons.mail_outline,color:  MyTheme.mainAppBlueColor,),
                 SizedBox(width: 10,),
-                Text("خدمة العملاء",style: TextStyle(color: HexColor("#638462"),
+                Text("خدمة العملاء",style: TextStyle(color:  MyTheme.mainAppBlueColor,
                     fontWeight: FontWeight.bold,fontSize: 18),),
                 Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
               ],
             ),
           ),
@@ -92,12 +93,30 @@ class MyDrawer extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10,),
-                Icon(Icons.rule_outlined,color: HexColor("#638462"),),
+                Icon(Icons.mail_outline,color:  MyTheme.mainAppBlueColor,),
                 SizedBox(width: 10,),
-                Text("الشروط والسياسة",style: TextStyle(color: HexColor("#638462"),
+                Text("خدمات مجانية",style: TextStyle(color:  MyTheme.mainAppBlueColor,
                     fontWeight: FontWeight.bold,fontSize: 18),),
                 Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
+              ],
+            ),
+          ),
+          SizedBox(height: 30,),
+          GestureDetector(
+            onTap: (){
+              /*Navigator.push(context, MaterialPageRoute(builder:
+                  (context)=>EdartElmshare()));*/
+            },
+            child: Row(
+              children: [
+                SizedBox(width: 10,),
+                Icon(Icons.rule_outlined,color:  MyTheme.mainAppBlueColor,),
+                SizedBox(width: 10,),
+                Text("الشروط والسياسة",style: TextStyle(color:  MyTheme.mainAppBlueColor,
+                    fontWeight: FontWeight.bold,fontSize: 18),),
+                Spacer(),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
               ],
             ),
           ),
@@ -110,12 +129,12 @@ class MyDrawer extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10,),
-                Icon(Icons.login,color: HexColor("#638462"),),
+                Icon(Icons.login,color:  MyTheme.mainAppBlueColor,),
                 SizedBox(width: 10,),
-                Text("دخول التطبيق",style: TextStyle(color: HexColor("#638462"),
+                Text("دخول التطبيق",style: TextStyle(color:  MyTheme.mainAppBlueColor,
                     fontWeight: FontWeight.bold,fontSize: 18),),
                 Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
               ],
             ),
           ):
@@ -128,12 +147,12 @@ class MyDrawer extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10,),
-                Icon(Icons.logout,color: HexColor("#638462"),),
+                Icon(Icons.logout,color:  MyTheme.mainAppBlueColor,),
                 SizedBox(width: 10,),
-                Text("خروج من التطبيق",style: TextStyle(color: HexColor("#638462"),
+                Text("خروج من التطبيق",style: TextStyle(color:  MyTheme.mainAppBlueColor,
                     fontWeight: FontWeight.bold,fontSize: 18),),
                 Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                Icon(Icons.chevron_right_rounded,color:  MyTheme.mainAppBlueColor,),
               ],
             ),
           ),

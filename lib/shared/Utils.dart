@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class Utils {
@@ -34,5 +35,9 @@ class Utils {
 
     _locationData = await location.getLocation();
     return _locationData;
+  }
+
+  Future showMyDialog(Widget child,BuildContext context){
+    return showDialog(context: context, builder: (context)=> child,);
   }
 }

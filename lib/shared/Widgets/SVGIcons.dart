@@ -24,4 +24,16 @@ class SVGIcons {
     width: 35,
     height: 35,
   );
+
+  static SvgPicture cars = SvgPicture.asset(
+    "assets/car.svg",
+    width: 20,
+    height: 20,
+  );
+
+  static SvgPicture gift = SvgPicture.asset(
+    "assets/gifts.svg",
+    width: 20,
+    height: 20,
+  );
 }

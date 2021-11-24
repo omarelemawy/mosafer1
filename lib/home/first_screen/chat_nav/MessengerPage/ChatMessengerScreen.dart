@@ -13,18 +13,21 @@ import 'package:mosafer1/home/first_screen/chat_nav/MapPage/MapView.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/MessengerPage/MessageItem.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/state_chat.dart';
+import 'package:mosafer1/home/first_screen/my_trips/my_trips_nav.dart';
 import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Widgets/CustomExpandedFAB.dart';
 import 'package:mosafer1/shared/Widgets/DrawerBtn.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:speed_dial_fab/speed_dial_fab.dart';
 
 
 class ChatMessengerScreen extends StatefulWidget {
-  ChatMessengerScreen({Key key}) : super(key: key);
+  final chatRoomId;
+  ChatMessengerScreen({Key key,this.chatRoomId}) : super(key: key);
 
   @override
   _ChatMessengerScreenState createState() => _ChatMessengerScreenState();
@@ -47,7 +50,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
       bottomNavigationBloc.toggleEnable(false);
 
       chatBloc = BlocProvider.of<ChatBloc>(context);
-      chatBloc.getMessages("cjujAnyhD9PCtUP4f2OH");
+      chatBloc.getMessages(widget.chatRoomId);
 
     });
     super.initState();
@@ -99,7 +102,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                         child: Text("بلاغ"),
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(MyTheme.mainAppColor),
+                                MaterialStateProperty.all(MyTheme.mainAppBlueColor),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)))),
@@ -190,7 +193,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                     },
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            MyTheme.mainAppColor),
+                            MyTheme.mainAppBlueColor),
                         shape: MaterialStateProperty.all(CircleBorder())),
                   ),
                   bottom: 85,
@@ -216,7 +219,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                       top: 35, left: 9, right: 9),
                                   width: size.width,
                                   decoration: BoxDecoration(
-                                      color: MyTheme.mainAppColor,
+                                      color: MyTheme.mainAppBlueColor,
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20),
                                           topRight: Radius.circular(20))),
@@ -340,7 +343,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                     width: size.width*0.75,
                                     padding: const EdgeInsets.all(13),
                                     decoration: BoxDecoration(
-                                        color: MyTheme.mainAppColor,
+                                        color: MyTheme.mainAppBlueColor,
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(20),
                                             topRight: Radius.circular(20))),
@@ -352,8 +355,8 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                             child: Padding(
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  bool fatorahSent = await Navigator.push(context, MaterialPageRoute(builder: (context) => FatorahPage()));
-                                                  if(fatorahSent){
+                                                  bool requestSent = await Navigator.push(context, MaterialPageRoute(builder: (context) => MyTripsNav(context,isFromMain: false,)));
+                                                  /*if(fatorahSent){
                                                     Message msg = Message(
                                                         user: User.forChat(
                                                           1,
@@ -368,11 +371,11 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                                         time: Timestamp.now().toString(),
                                                         seen: false,
                                                         isCurrentUser: true);
-                                                    await _chatData.sendMessage(chatRoomId: 'cjujAnyhD9PCtUP4f2OH',message: msg);
-                                                  }
+                                                    await _chatData.sendMessage(chatRoomId: widget.chatRoomId,message: msg);
+                                                  }*/
                                                 },
                                                 child: Text(
-                                                  "انشا فاتورة",
+                                                  "حدد طلبك",
                                                   style: appTheme.textTheme.bodyText2,
                                                 ),
                                                 style: ButtonStyle(
@@ -421,7 +424,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                       alignment: AlignmentDirectional.centerStart,
                       width: size.width,
                       height: size.height * 0.1,
-                      color: MyTheme.mainAppColorBright,
+                      color: MyTheme.mainAppBlueColorBright,
                     ),
                   ],
                 ),
@@ -456,9 +459,9 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                   print("selected location $location");
                                   Message msg = Message(
                                       user: User.forChat(
-                                        1,
-                                        "Muhammed Shawky",
-                                        'https://www.hotfootdesign.co.uk/wp-content/uploads/2016/05/d5jA8OZv.jpg',
+                                        CacheHelper.getData(key: "id"),
+                                        CacheHelper.getData(key: "name"),
+                                        CacheHelper.getData(key: "photo"),
                                         "idPhoto",
                                         "email",
                                       ),
@@ -468,7 +471,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                       time: Timestamp.now().toString(),
                                       seen: false,
                                       isCurrentUser: true);
-                                  await _chatData.sendMessage(chatRoomId: 'cjujAnyhD9PCtUP4f2OH',message: msg);
+                                  await _chatData.sendMessage(chatRoomId: widget.chatRoomId,message: msg);
                                   moveChat();
                                   break;
                                 }
@@ -553,9 +556,9 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                     if(_messageSendController.text.isNotEmpty || chatBloc.imagePath.isNotEmpty){
                                       Message msg = Message(
                                           user: User.forChat(
-                                            1,
-                                            "Muhammed Shawky",
-                                            'https://www.hotfootdesign.co.uk/wp-content/uploads/2016/05/d5jA8OZv.jpg',
+                                            CacheHelper.getData(key: "id"),
+                                            CacheHelper.getData(key: "name"),
+                                            CacheHelper.getData(key: "photo"),
                                             "idPhoto",
                                             "email",
                                           ),
@@ -566,13 +569,13 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                           isCurrentUser: true);
                                       //chatBloc.sendMessage(msg, _scrollController);
                                       _messageSendController.clear();
-                                      await _chatData.sendMessage(chatRoomId: "cjujAnyhD9PCtUP4f2OH" , message: msg);
+                                      await _chatData.sendMessage(chatRoomId: widget.chatRoomId , message: msg);
                                       moveChat();
                                     }
                                   },
                                   icon: Icon(
                                     Icons.send,
-                                    color: MyTheme.mainAppColor,
+                                    color: MyTheme.mainAppBlueColor,
                                     size: 20,
                                   ),
                                 ),

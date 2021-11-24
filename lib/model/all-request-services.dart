@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:mosafer1/shared/Utils.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class GetAllRequestServicesModel {
@@ -449,7 +450,7 @@ class Message {
         messageLocation: map['messageLocation'] != null ? map['messageLocation']  : null,
         messageImage: map["messageImage"],
         messageType: _getMessageType(map["messageType "]),
-        isCurrentUser: true,
+        isCurrentUser: map["userInfo"]["userId"] == CacheHelper.getData(key: "id"),
         user: User.forChat(
             map["userInfo"]["userId"],
             map["userInfo"]["userName"],

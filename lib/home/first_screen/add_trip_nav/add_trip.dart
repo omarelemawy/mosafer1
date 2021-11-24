@@ -6,6 +6,7 @@ import 'package:mosafer1/home/first_screen/add_trip_nav/bloc/state_add_trip.dart
 import 'package:mosafer1/home/first_screen/add_trip_nav/more_info_add_trip.dart';
 import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/model/get-all-main-trip-categorires.dart';
+import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../drawer/drawer.dart';
@@ -28,7 +29,16 @@ class AddTrip extends StatelessWidget {
         builder: (context, state) {
           return  CacheHelper.getData(key: "token")==null?
           Scaffold(
+            appBar: AppBar(
+              leading: TextButton(
+                child: SVGIcons.barIcon,
+                onPressed: () {
 
+                },
+              ),
+              centerTitle: true,
+              title: Text("اضافة رحله",style: TextStyle(fontFamily: "beIN"),),
+            ),
             body: Container(
               width: double.infinity,
               height: double.infinity,
@@ -146,7 +156,7 @@ class AddTrip extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(mainCat.categorieName,
-                      style: TextStyle(color: HexColor("#638462"),
+                      style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold
                       ),

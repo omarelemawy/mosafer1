@@ -16,7 +16,7 @@ class ChatBloc extends Cubit<ChatStates> {
   List<Message> messages = [];
   List<ChatRoom> chatRooms = [];
   String imagePath = "";
-  void getMessages(String chatRoomId){
+  void getMessages(var chatRoomId){
     _chatData.chatRoomStream(chatRoomId).listen((messageData) {
       List<Message> msgList = Message.toList(messageData);
       messages = msgList;
@@ -26,7 +26,6 @@ class ChatBloc extends Cubit<ChatStates> {
       }else{
         emit(NoMessageChatStates());
       }
-
     });
     print("Loading");
   }

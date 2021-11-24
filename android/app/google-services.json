@@ -62,6 +62,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160090249:android:d25d94bad1eaf022d3de58",
+        "android_client_info": {
+          "package_name": "com.wework.mosaferclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160090249-2133ok2b859gn07f2l9s42o8lv0ns0ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBj1xVWuwMA8bN4tJd9g9f5xwm14WUtRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160090249-2133ok2b859gn07f2l9s42o8lv0ns0ka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

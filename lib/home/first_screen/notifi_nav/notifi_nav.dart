@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mosafer1/home/drawer/drawer.dart';
 import 'package:mosafer1/home/first_screen/notifi_nav/bloc/bloc_notifi.dart';
 import 'package:mosafer1/home/first_screen/notifi_nav/bloc/state_notifi.dart';
+import 'package:mosafer1/shared/Widgets/CustomAppBar.dart';
+import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 
 
 class NotifiNav extends StatefulWidget {
@@ -28,6 +30,7 @@ class _NotifiNavState extends State<NotifiNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(child: CustomAppBar(title: "الاشعارات",),preferredSize: Size.fromHeight(60),),
       body: Center(
         child: BlocConsumer<NotifiBloc,NotifiStates>(
           builder: (context,state){

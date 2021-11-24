@@ -8,6 +8,7 @@ class MyTheme {
   static const Color mainAppColor = Color(0xFF8F9F83);
   static const Color mainAppColorBright = Color(0xFFBDDBA6);
   static const Color mainAppBlueColor = Color(0xFF5787A6);
+  static const Color mainAppBlueColorBright = Color(0xFF5787A6);
   static const MaterialColor mainAppSwatchColor = const MaterialColor(
     0xFF004685,
     const <int, Color>{
@@ -23,11 +24,25 @@ class MyTheme {
       900: const Color(0xFF8F9F83),
     },
   );
-
+  static const MaterialColor mainAppBlueSwatchColor = const MaterialColor(
+    0xFF004685,
+    const <int, Color>{
+      50: const Color(0xFF5787A6),
+      100: const Color(0xFF5787A6),
+      200: const Color(0xFF5787A6),
+      300: const Color(0xFF5787A6),
+      400: const Color(0xFF5787A6),
+      500: const Color(0xFF5787A6),
+      600: const Color(0xFF5787A6),
+      700: const Color(0xFF5787A6),
+      800: const Color(0xFF5787A6),
+      900: const Color(0xFF5787A6),
+    },
+  );
  static ThemeData themeLight() =>
       ThemeData(
-        primaryColor: mainAppColor,
-        primarySwatch: mainAppSwatchColor,
+        primaryColor: mainAppBlueColor,
+        primarySwatch: mainAppBlueSwatchColor,
         scaffoldBackgroundColor: Colors.white,
         fontFamily: "beIN",
         textTheme: const TextTheme(
@@ -42,7 +57,7 @@ class MyTheme {
 
           ),
           bodyText2: TextStyle(
-            color: mainAppColor,
+            color: mainAppBlueColor,
             fontSize: 14,
           ),
           button: TextStyle(color: Colors.white,fontSize: 14),

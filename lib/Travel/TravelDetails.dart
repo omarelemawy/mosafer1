@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosafer1/home/first_screen/chat_nav/MessengerPage/ChatMessengerScreen.dart';
 import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Constats.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
@@ -112,7 +113,7 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 5, bottom: 5),
                   decoration: BoxDecoration(
-                      color: MyTheme.mainAppColor,
+                      color: MyTheme.mainAppBlueColor,
                       borderRadius: BorderRadius.circular(20)),
                 )
               ],
@@ -128,10 +129,11 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                 {
                   _chatData.getOrCreateChatRoom(1 , 1).then((value) {
                     print("Chat room : ${value}");
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatMessengerScreen()));
                   });
 
                 }, child: Text("تفاوض"),style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(MyTheme.mainAppColor),
+                  backgroundColor: MaterialStateProperty.all(MyTheme.mainAppBlueColor),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                 ),),
                 padding: const EdgeInsets.all(15),
@@ -141,7 +143,7 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                     topLeft: Radius.circular(15), topRight: Radius.circular(15)),
                 minHeight: size.height * 0.3,
                 maxHeight: size.height * 0.5,
-                color: MyTheme.mainAppColor,
+                color: MyTheme.mainAppBlueColor,
                 header: Stack(
                   alignment: AlignmentDirectional.bottomStart,
                   children: [
@@ -150,7 +152,7 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                       width: size.width,
                       padding: const EdgeInsets.all(13),
                       decoration: BoxDecoration(
-                          color: MyTheme.mainAppColor,
+                          color: MyTheme.mainAppBlueColor,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20))),

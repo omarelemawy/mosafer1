@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/Travel/TravelDetails.dart';
+import 'package:mosafer1/home/drawer/drawer.dart';
 import 'package:mosafer1/home/first_screen/home_nav/cubit/home_cubit.dart';
 import 'package:mosafer1/home/first_screen/home_nav/cubit/home_state.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/shared/Widgets/CustomAppBar.dart';
+import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 
 class HomeNav extends StatefulWidget {
@@ -22,11 +25,13 @@ class _HomeNavState extends State<HomeNav> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>HomeCubit()..getAllServices(),
+      create: (BuildContext context) => HomeCubit()..getAllServices(),
       child: BlocConsumer<HomeCubit,HomeStates>(
         builder: (context,state){
           List<RequestServices> allRequestsSe = HomeCubit.get(context).allRequestsSe;
           return Scaffold(
+            appBar: PreferredSize(child: CustomAppBar(title: "المسافرين",),preferredSize: Size.fromHeight(60),),
+            drawer: MyDrawer(),
             body: state is GetLoadingAllRequestServicesStates?
             Center(child: CircularProgressIndicator()):Padding(
               padding: const EdgeInsets.only(bottom: 20.0,top: 10,right: 10,left: 10),
@@ -47,7 +52,7 @@ class _HomeNavState extends State<HomeNav> {
                                     alignment: Alignment.bottomRight,
                                     children: [
                                       CircleAvatar(
-                                        backgroundColor:HexColor("#F5F4F4"),
+                                        backgroundColor:MyTheme.mainAppBlueColor,
                                         radius: 40,
                                         backgroundImage: NetworkImage(allRequestsSe[index].photo),
                                       ),
@@ -170,7 +175,7 @@ class _HomeNavState extends State<HomeNav> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),
                                     bottomLeft: Radius.circular(15)),
-                                color: HexColor("#A2B594"),
+                                color : MyTheme.mainAppBlueColor,
                               ),
                             ),
                             Padding(
@@ -191,7 +196,7 @@ class _HomeNavState extends State<HomeNav> {
                                       , child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(allRequestsSe[index].service.categorieName,style:
+                                          Text("دخول",style:
                                           TextStyle(fontFamily: "beIN",fontSize: 14,color: MyTheme.mainAppColor),),
                                           Icon(Icons.chevron_right,color: MyTheme.mainAppColor,),
                                         ],

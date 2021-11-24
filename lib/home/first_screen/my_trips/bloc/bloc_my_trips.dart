@@ -14,7 +14,7 @@ class MyTripsBloc extends Cubit<MyTripsStates>{
     emit(GetLoadingAllMyRequestServicesStates());
     var Api = Uri.parse("https://msafr.we-work.pro/api/auth/masafr/get-my-trips");
     Map<String, String> mapData = {
-      'authToken': CacheHelper.getData(key: "token"),
+      'authToken': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbXNhZnIud2Utd29yay5wcm9cL2FwaVwvbWFzYWZyXC9sb2dpbiIsImlhdCI6MTYzNzc5MDA5MiwibmJmIjoxNjM3NzkwMDkyLCJqdGkiOiI4dmxyUHBTdEhRM2QxOGtjIiwic3ViIjoxLCJwcnYiOiI4ZjAyMzk3MWIxZDA3OTI2YmRhMDA3OWJlZWI5YTdkOTU0NGQyNTc1In0.vAaqei4zIJRiRKuHcJfhywP0K3mZo_7YQJSILQwBxK8',
     };
     final response = await http.post(Api,headers: mapData);
     if (response.statusCode == 200) {

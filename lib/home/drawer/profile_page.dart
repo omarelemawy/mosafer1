@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mosafer1/CommentsEdit/CommentsEdit.dart';
+import 'package:mosafer1/Complaint/ComplaintsPage.dart';
+import 'package:mosafer1/MoneyTransactions/MoneyTransactionPage.dart';
 import 'package:mosafer1/home/drawer/bloc/state_drawer.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 import 'bloc/cubit_drawer.dart';
 import 'edit_your_data.dart';
@@ -23,201 +27,145 @@ class ProfilePage extends StatelessWidget {
             ),
             body: state is GetLoadingMosaferInformationStates?
             Center(child: CircularProgressIndicator()):
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 30,),
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor:HexColor("#F5F4F4"),
-                        radius: 40,
-                        backgroundImage: NetworkImage(""),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          child: Icon(Icons.check,color:Colors.white,size:12,),
-                          backgroundColor: Colors.green,
-                          radius: 7,
-                        ),
-                      ),
-                    ],
-                  ),
-                  RatingBar.builder(
-                    initialRating:double.parse(DrawerCubit.get(context).mosafrInformationModel.data.rate),
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemSize: 15,
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: HexColor("#9EA657"),
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  Text(DrawerCubit.get(context).mosafrInformationModel.data.name,style: TextStyle(color: HexColor("#5787A6"),
-                      fontWeight: FontWeight.bold),),
-                  SizedBox(height: 10,),
-                  SizedBox(height: 30,),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    color: HexColor("#A2B594"),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 30,),
+                    Stack(
+                      alignment: Alignment.bottomRight,
                       children: [
-                        Text("Number Of Trips",style: TextStyle(color: Colors.black),),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration:BoxDecoration(
-                            color:Colors.white,
-                            shape: BoxShape.circle
+                        CircleAvatar(
+                          backgroundColor:HexColor("#F5F4F4"),
+                          radius: 70,
+                          backgroundImage: NetworkImage(""),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            child: Icon(Icons.check,color:Colors.white,size:12,),
+                            backgroundColor: Colors.green,
+                            radius: 7,
                           ),
-                            child: Text("0")),
-                        Text("Negative points",style: TextStyle(color: Colors.black)),
-                        Container(
-                            padding: EdgeInsets.all(10),
-                            decoration:BoxDecoration(
-                                color:Colors.white,
-                                shape: BoxShape.circle
-                            ),
-                            child: Text("0")),
-                        Text("Bargains",style: TextStyle(color: Colors.black)),
-                        Container(
-                            padding: EdgeInsets.all(10),
-                            decoration:BoxDecoration(
-                                color:Colors.white,
-                                shape: BoxShape.circle
-                            ),
-                            child: Text("0")),
+                        ),
                       ],
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EditYourData()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                    RatingBar.builder(
+                      initialRating:double.parse(DrawerCubit.get(context).mosafrInformationModel.data.rate),
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 15,
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: HexColor("#9EA657"),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text(DrawerCubit.get(context).mosafrInformationModel.data.name,style: TextStyle(color: HexColor("#5787A6"),
+                        fontWeight: FontWeight.bold),),
+                    SizedBox(height: 10,),
+                    SizedBox(height: 30,),
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      color: MyTheme.mainAppBlueColor,
                       child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                             Icon(Icons.description,color: HexColor("#5787A6"),),
-                             SizedBox(width: 10,),
-                             Text("Edit your data",style: TextStyle(color: HexColor("#5787A6")),),
-                             Spacer(),
-                             Icon(Icons.chevron_right,color: Colors.black,),
+                          Text("Number Of Trips",style: TextStyle(color: Colors.black),),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration:BoxDecoration(
+                              color:Colors.white,
+                              shape: BoxShape.circle
+                            ),
+                              child: Text("0")),
+                          Text("Negative points",style: TextStyle(color: Colors.black)),
+                          Container(
+                              padding: EdgeInsets.all(10),
+                              decoration:BoxDecoration(
+                                  color:Colors.white,
+                                  shape: BoxShape.circle
+                              ),
+                              child: Text("0")),
+                          Text("Bargains",style: TextStyle(color: Colors.black)),
+                          Container(
+                              padding: EdgeInsets.all(10),
+                              decoration:BoxDecoration(
+                                  color:Colors.white,
+                                  shape: BoxShape.circle
+                              ),
+                              child: Text("0")),
                         ],
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
+                    ListTile(
+                      title: Row(
                         children: [
-                          Icon(Icons.description,color: HexColor("#5787A6"),),
-                          SizedBox(width: 10,),
-                          Text("Authentication data",style: TextStyle(color: HexColor("#5787A6")),),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Colors.black,),
+                          Icon(Icons.insert_drive_file,color: MyTheme.mainAppBlueColor,),
+                          Text("تعديل بياناتك")
                         ],
                       ),
+                      trailing: Icon(Icons.chevron_right,color: MyTheme.mainAppBlueColor,),
+                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> EditYourData())),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
+                    Divider(endIndent: 15,indent: 15,),
+                    ListTile(
+                      title: Row(
                         children: [
-                          Image.asset("assets/attach_money_black_24dp.png",errorBuilder: (context, error, stackTrace) => Container()),
-                          SizedBox(width: 10,),
-                          Text("Charge your account",style: TextStyle(color: HexColor("#5787A6")),),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Colors.black,),
+                          Icon(Icons.monetization_on,color: MyTheme.mainAppBlueColor,),
+                          Text("اشحن رصيدك")
                         ],
                       ),
+                      trailing: Icon(Icons.chevron_right,color: MyTheme.mainAppBlueColor,),
+                      onTap: (){},
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
+                    Divider(endIndent: 15,indent: 15,),
+                    ListTile(
+                      title: Row(
                         children: [
-                          Image.asset("assets/Group 1343.png",errorBuilder: (context, error, stackTrace) => Container()),
-                          SizedBox(width: 10,),
-                          Text("Balance withdrawal",style: TextStyle(color: HexColor("#5787A6")),),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Colors.black,),
+                          Icon(Icons.notifications_active,color: MyTheme.mainAppBlueColor,),
+                          Text("الشكاوي")
                         ],
                       ),
+                      trailing: Icon(Icons.chevron_right,color: MyTheme.mainAppBlueColor,),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ComplaintesPage()));
+                      },
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
+                    Divider(endIndent: 15,indent: 15,),
+                    ListTile(
+                      title: Row(
                         children: [
-                          Image.asset("assets/request_quote_black_24dp.png",errorBuilder: (context, error, stackTrace) => Container()),
-                          SizedBox(width: 10,),
-                          Text("Financial Operations",style: TextStyle(color: HexColor("#5787A6")),),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Colors.black,),
+                          Icon(Icons.monetization_on_outlined,color: MyTheme.mainAppBlueColor,),
+                          Text("العمليات المالية")
                         ],
                       ),
+                      trailing: Padding(
+                        child: Text("رصيدك : ٢٣٠ ريال"),
+                        padding: const EdgeInsets.only(left: 15,right: 15),
+                      ),
+                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> MoneyTransactionPage())),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
+                    Divider(endIndent: 15,indent: 15,),
+                    ListTile(
+                      title: Row(
                         children: [
-                          Image.asset("assets/edit_note_black_24dp.png",errorBuilder: (context, error, stackTrace) => Container(),),
-                          SizedBox(width: 10,),
-                          Text("Edit comments",style: TextStyle(color: HexColor("#5787A6")),),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Colors.black,),
+                          Icon(Icons.add_comment,color: MyTheme.mainAppBlueColor,),
+                          Text("تعديل التعليقات")
                         ],
                       ),
+                      trailing: Icon(Icons.chevron_right,color: MyTheme.mainAppBlueColor,),
+                      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => CommentsEdit())),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.notifications_paused_outlined,color: HexColor("#5787A6"),),
-                          SizedBox(width: 10,),
-                          Text("Complaints",style: TextStyle(color: HexColor("#5787A6")),),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Colors.black,),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                    Divider(endIndent: 15,indent: 15,),
+                  ],
+                ),
               ),
             ),
           );

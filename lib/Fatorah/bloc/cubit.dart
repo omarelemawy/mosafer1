@@ -58,8 +58,8 @@ class FatorahCubit extends Cubit<FatorahState>{
     });
 
     Map data = {
-      "chat_id": 1 ,
-      "fatoorahs" : fatoorahServices
+      "chat_ids":1,
+      "fatoorahs":fatoorahServices
     };
 
     print("Data $data");

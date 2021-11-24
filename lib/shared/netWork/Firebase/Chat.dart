@@ -13,9 +13,9 @@ class ChatData {
   FirebaseStorage storage = FirebaseStorage.instance;
 
   HttpOps _httpOps = HttpOps();
-  Stream<QuerySnapshot> chatRoomStream(String chatRoomId) => _firestore.collection("ChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
+  Stream<QuerySnapshot> chatRoomStream(var chatRoomId) => _firestore.collection("ChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
 
-  Future sendMessage({String chatRoomId , Message message}) async {
+  Future sendMessage({var chatRoomId , Message message}) async {
     String imgUrl = "";
     if(message.messageImage.isNotEmpty) {
       var uuid = Uuid().v1();
@@ -38,14 +38,14 @@ class ChatData {
 
   Future<int> getOrCreateChatRoom(int userId,int msaferId) async {
 
-    Map data  = {
+    Map data    =   {
       "paginateCount" : 10,
       "user_id" : userId,
       "masafr_id" : msaferId
     };
 
     GetAllRequestServicesModel responseModel = await _httpOps.postData(endPoint: createChatRoom,auth: true , mapData: data);
-    return responseModel.dataObj != null ? responseModel.dataObj as int : 0;
+    return responseModel.dataObj != null ? responseModel.dataObj["id"] as int : 0;
 
   }
 }
