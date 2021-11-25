@@ -13,18 +13,19 @@ import 'package:http/http.dart'as http;
 class DrawerCubit extends Cubit<DrawerState>{
   DrawerCubit() : super(InitialDrawerState());
   static DrawerCubit get(context) => BlocProvider.of(context);
+
   MosafrInformationModel mosafrInformationModel;
 
-  Future<MosafrInformationModel> getMosafrInformation () async {
+  Future<MosafrInformationModel> getUsernformation () async {
     emit(GetLoadingMosaferInformationStates());
-    var Api = Uri.parse("https://msafr.we-work.pro/api/auth/masafr/get-user-info");
+    var Api = Uri.parse("https://msafr.we-work.pro/api/auth/user/get-user-info");
     Map<String, String> mapData = {
       'authToken': CacheHelper.getData(key: "token"),
     };
     final response = await http.post(Api,headers: mapData);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
-      emit(GetSuccessMosaferInformationStates());
+      emit(GetSuccessMosaferInformationStates(MosafrInformationModel.fromJson(json)));
       print(response.body);
       return MosafrInformationModel.fromJson(json);
     } else {
@@ -33,12 +34,45 @@ class DrawerCubit extends Cubit<DrawerState>{
       emit(GetErrorMosaferInformationStates(json['msg']));
     }
   }
-  void getgetMosafrInform()
+
+  void getgetUserInform()
   {
-    getMosafrInformation().then((value) {
+    getUsernformation().then((value) {
       mosafrInformationModel  = value;
     });
   }
+
+  Future<MosafrInformationModel> getMosafernformation ({int id}) async {
+    emit(GetLoadingMosaferInformationStates());
+    var Api = Uri.parse("https://msafr.we-work.pro/api/auth/user/masafr-info");
+    Map<String, String> mapData = {
+      'authToken': CacheHelper.getData(key: "token"),
+      "Content-Type": "application/json; charset=UTF-8",
+    };
+    final response = await http.post(Api,headers: mapData,body: jsonEncode({
+      "id"  : id
+    }));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      mosafrInformationModel  =  MosafrInformationModel.fromJson(json);
+      emit(GetSuccessMosaferInformationStates(MosafrInformationModel.fromJson(json)));
+      print(response.body);
+      return MosafrInformationModel.fromJson(json);
+    } else {
+      final json = jsonDecode(response.body);
+      print(response.body);
+      emit(GetErrorMosaferInformationStates(json['msg']));
+    }
+  }
+
+  void getgetMosaferInform({int id})
+  {
+    getMosafernformation(id: id).then((value) {
+      print("Val : ${value.data.name}");
+      mosafrInformationModel  = value;
+    });
+  }
+
   Future editProfile (context,name,national_id_number,gender,email,password) async {
     emit(EditProfileLoadingStates());
     var Api = Uri.parse("https://msafr.we-work.pro/api/auth/masafr/update-masafr-info");

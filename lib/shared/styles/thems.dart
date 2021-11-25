@@ -124,7 +124,8 @@ class MyTheme {
      button: TextStyle(color: Colors.white,fontSize: 14),
      overline: TextStyle(color: Colors.red,fontSize: 14),
      headline1: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),
-     headline2: TextStyle(color: Colors.white,fontSize: 20)
+     headline2: TextStyle(color: Colors.white,fontSize: 20),
+     bodyText1: TextStyle(color: Colors.white,fontSize: 18),
    )
  ) ;
 }

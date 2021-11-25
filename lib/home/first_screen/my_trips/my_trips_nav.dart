@@ -17,7 +17,7 @@ import 'bloc/bloc_my_trips.dart';
 class MyTripsNav extends StatelessWidget {
   BuildContext context1;
   final bool isFromMain;
-  MyTripsNav(this.context1,{this.isFromMain = true});
+  MyTripsNav(this.context1, {this.isFromMain = true});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -81,7 +81,13 @@ class MyTripsNav extends StatelessWidget {
                             padding: const EdgeInsets.only(
                                 bottom: 20.0, top: 10, right: 10, left: 10),
                             child: ListView.separated(
-                              itemBuilder: (context, index) => RequestItem(isFromMain: isFromMain,trips: allMyTrips[index]),
+                              itemBuilder: (context, index) => RequestItem(
+                                isFromMain: isFromMain,
+                                trips: allMyTrips[index],
+                                onTripClick: () {
+                                  Navigator.pop(context,allMyTrips[index]);
+                                },
+                              ),
                               itemCount: allMyTrips.length,
                               separatorBuilder:
                                   (BuildContext context, int index) {
@@ -103,7 +109,8 @@ class MyTripsNav extends StatelessWidget {
 class RequestItem extends StatelessWidget {
   bool isFromMain;
   Trips trips;
-  RequestItem({this.isFromMain = true,this.trips});
+  VoidCallback onTripClick;
+  RequestItem({this.isFromMain = true, this.trips, this.onTripClick});
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +121,8 @@ class RequestItem extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: MyTheme.mainAppBlueColor.withOpacity(0.5)),
+              border:
+                  Border.all(color: MyTheme.mainAppBlueColor.withOpacity(0.5)),
             ),
             child: Column(
               children: [
@@ -129,7 +137,7 @@ class RequestItem extends StatelessWidget {
                                 placeholder: placeholder2,
                                 fit: BoxFit.cover,
                                 image:
-                                'https://www.iihs.org/api/ratings/model-year-images/3112/636/',
+                                    'https://www.iihs.org/api/ratings/model-year-images/3112/636/',
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -213,8 +221,8 @@ class RequestItem extends StatelessWidget {
                                             fontSize: 16, color: Colors.white),
                                       ),
                                     ),
-                                    backgroundColor:
-                                    MyTheme.mainAppBlueColor.withOpacity(0.6),
+                                    backgroundColor: MyTheme.mainAppBlueColor
+                                        .withOpacity(0.6),
                                   ),
                                 ],
                               ),
@@ -235,8 +243,8 @@ class RequestItem extends StatelessWidget {
                                             fontSize: 16, color: Colors.white),
                                       ),
                                     ),
-                                    backgroundColor:
-                                    MyTheme.mainAppBlueColor.withOpacity(0.6),
+                                    backgroundColor: MyTheme.mainAppBlueColor
+                                        .withOpacity(0.6),
                                   ),
                                 ],
                               ),
@@ -257,8 +265,8 @@ class RequestItem extends StatelessWidget {
                                             fontSize: 16, color: Colors.white),
                                       ),
                                     ),
-                                    backgroundColor:
-                                    MyTheme.mainAppBlueColor.withOpacity(0.6),
+                                    backgroundColor: MyTheme.mainAppBlueColor
+                                        .withOpacity(0.6),
                                   ),
                                 ],
                               ),
@@ -279,8 +287,8 @@ class RequestItem extends StatelessWidget {
                                             fontSize: 16, color: Colors.white),
                                       ),
                                     ),
-                                    backgroundColor:
-                                    MyTheme.mainAppBlueColor.withOpacity(0.6),
+                                    backgroundColor: MyTheme.mainAppBlueColor
+                                        .withOpacity(0.6),
                                   ),
                                 ],
                               )
@@ -298,12 +306,29 @@ class RequestItem extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton(onPressed: (){}, child: Text("تعديل",style: TextStyle(color: MyTheme.mainAppBlueColor),),style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.white),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
-                        ),),
-                        Text("رقم الطلب :  232",style: TextStyle(color: Colors.white,fontSize: 16)),
-                        IconButton(onPressed: (){}, icon: Icon(Icons.restore_from_trash,color: Colors.white,))
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "تعديل",
+                            style: TextStyle(color: MyTheme.mainAppBlueColor),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20)))),
+                        ),
+                        Text("رقم الطلب :  232",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16)),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.restore_from_trash,
+                              color: Colors.white,
+                            ))
                       ],
                     ),
                     decoration: BoxDecoration(color: MyTheme.mainAppBlueColor),
@@ -312,11 +337,22 @@ class RequestItem extends StatelessWidget {
               ],
             ),
           ),
-          if(!isFromMain) ElevatedButton(onPressed: (){}, child: Text("تاكيد",style: TextStyle(color: Colors.white),),style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(MyTheme.mainAppBlueColor),
-              fixedSize: MaterialStateProperty.all(Size.fromWidth(120)),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
-          ),),
+          if (!isFromMain)
+            ElevatedButton(
+              onPressed: () {
+                onTripClick();
+              },
+              child: Text(
+                "تاكيد",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyTheme.mainAppBlueColor),
+                  fixedSize: MaterialStateProperty.all(Size.fromWidth(120)),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)))),
+            ),
         ],
       ),
     );

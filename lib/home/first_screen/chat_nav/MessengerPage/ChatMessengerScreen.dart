@@ -15,10 +15,12 @@ import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/state_chat.dart';
 import 'package:mosafer1/home/first_screen/my_trips/my_trips_nav.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/model/get-my-trips.dart';
 import 'package:mosafer1/shared/Widgets/CustomExpandedFAB.dart';
 import 'package:mosafer1/shared/Widgets/DrawerBtn.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
+import 'package:mosafer1/shared/netWork/end_point.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -150,6 +152,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                     appTheme: appTheme,
                     message: chatBloc.messages[index],
                     isCurrentUser: true,
+                    onEnterButtonPress: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> FatorahPage())),
                   ),
                 );
               } else if(state is NoMessageChatStates) {
@@ -355,24 +358,34 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                             child: Padding(
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  bool requestSent = await Navigator.push(context, MaterialPageRoute(builder: (context) => MyTripsNav(context,isFromMain: false,)));
-                                                  /*if(fatorahSent){
-                                                    Message msg = Message(
-                                                        user: User.forChat(
-                                                          1,
-                                                          "Muhammed Shawky",
-                                                          'https://www.hotfootdesign.co.uk/wp-content/uploads/2016/05/d5jA8OZv.jpg',
-                                                          "idPhoto",
-                                                          "email",
-                                                        ),
-                                                        message: "تم ارسال فاتورة",
-                                                        messageImage: "",
-                                                        messageType: MessageType.Reset,
-                                                        time: Timestamp.now().toString(),
-                                                        seen: false,
-                                                        isCurrentUser: true);
-                                                    await _chatData.sendMessage(chatRoomId: widget.chatRoomId,message: msg);
-                                                  }*/
+                                                  Trips request = await Navigator.push(context, MaterialPageRoute(builder: (context) => MyTripsNav(context,isFromMain: false,)));
+                                                  if(request != null){
+                                                    print("Request : ${request.id}");
+                                                    String messageText = await chatBloc.createNegotiationRequest(request_id: request.id,chat_id: 1);
+                                                    if(messageText.isNotEmpty){
+                                                      Message msg = Message(
+                                                          user: User.forChat(
+                                                            CacheHelper.getData(key: "id"),
+                                                            CacheHelper.getData(key: "name"),
+                                                            CacheHelper.getData(key: "photo"),
+                                                            "idPhoto",
+                                                            "email",
+                                                          ),
+                                                          message: messageText,
+                                                          messageImage: "",
+                                                          additionalData: {
+                                                            "code" : "",
+                                                            "id" : request.id,
+                                                            "message" : ""
+                                                          },
+                                                          messageType: MessageType.Request,
+                                                          time: Timestamp.now().toString(),
+                                                          seen: false,
+                                                          isCurrentUser: true);
+                                                      await _chatData.sendMessage(chatRoomId: widget.chatRoomId,message: msg);
+
+                                                    }
+                                                  }
                                                 },
                                                 child: Text(
                                                   "حدد طلبك",

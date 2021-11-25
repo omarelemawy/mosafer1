@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (BuildContext context) => DrawerCubit()..getgetMosafrInform(),
+        create: (BuildContext context) => DrawerCubit()..getgetUserInform(),
         child: BlocConsumer<DrawerCubit,DrawerState>(builder:
             (BuildContext context, state) {
           return Scaffold(

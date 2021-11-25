@@ -439,8 +439,8 @@ class Message {
   bool isCurrentUser;
   String time;
   bool seen;
-
-  Message({this.message, this.messageImage,this.messageType,this.user, this.isCurrentUser,this.time,this.seen,this.messageLocation});
+  Map additionalData;
+  Message({this.message, this.messageImage,this.messageType,this.user, this.isCurrentUser,this.time,this.seen,this.messageLocation,this.additionalData});
 
   factory Message.fromMap(QueryDocumentSnapshot map) {
     return Message(
@@ -451,6 +451,7 @@ class Message {
         messageImage: map["messageImage"],
         messageType: _getMessageType(map["messageType "]),
         isCurrentUser: map["userInfo"]["userId"] == CacheHelper.getData(key: "id"),
+//        additionalData: map["additionalData"] != null ? map["additionalData"] : null,
         user: User.forChat(
             map["userInfo"]["userId"],
             map["userInfo"]["userName"],
@@ -474,7 +475,8 @@ class Message {
         "userName" : user.name,
         "image" : user.photo,
         "userId" : user.id,
-      }
+      },
+      "additionalData" : additionalData
     };
   }
 
@@ -552,6 +554,7 @@ enum MessageType {
   MapMessage,
   Complaint,
   Reset,
+  Request
 }
 
 extension ToString on MessageType {
@@ -563,6 +566,7 @@ extension ToString on MessageType {
       case MessageType.TextImageMessage: return 'TextImageMessage';
       case MessageType.MapMessage: return 'MapMessage';
       case MessageType.Complaint: return 'Complaint';
+      case MessageType.Request: return 'Request';
     }
     return "TextMessage";
   }

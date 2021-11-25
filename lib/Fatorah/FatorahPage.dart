@@ -38,7 +38,7 @@ class FatorahPage extends StatelessWidget {
             ),
           ],
           title: Text(
-            "طلب السعر",
+            "الفاتورة",
             style: TextStyle(fontFamily: "beIN"),
           ),
         ),
@@ -67,7 +67,7 @@ class FatorahPage extends StatelessWidget {
                                     SVGIcons.hoursIcon,
                                     Padding(
                                         child: Text(
-                                          "طلب",
+                                          "الفاتورة",
                                           style: MyTheme.defaultAppTextTheme()
                                               .textTheme
                                               .headline1,
@@ -114,44 +114,27 @@ class FatorahPage extends StatelessWidget {
                                 ],
                               ),
                               Utils.vSpace(15),
-                              BlocConsumer<FatorahCubit, FatorahState>(
-                                listener: (context, state) {},
-                                builder: (context, state) {
-                                  if (state is InitialFatorahState ||
-                                      state is MoreServicesFatorahState) {
-                                    return Column(
-                                      children: List<Widget>.generate(
-                                          fatorahCubit.addServicesList.length,
-                                          (index) => AddService(
-                                                index: index,
-                                              )),
-                                    );
-                                  }
-                                  return Column(
-                                    children: List<Widget>.generate(
-                                        fatorahCubit.addServicesList.length,
-                                        (index) => AddService(
-                                              index: index,
-                                            )),
-                                  );
-                                },
-                              ),
-                              Padding(
-                                child: Row(
-                                  children: [
-                                    Text("مبلغ التامين تحصل علي ",
-                                        style: MyTheme.defaultAppTextTheme()
-                                            .textTheme
-                                            .headline2),
-                                    Spacer(),
-                                    Text("55 ر.س",
-                                        style: MyTheme.defaultAppTextTheme()
-                                            .textTheme
-                                            .headline2),
-                                  ],
+                              Column(
+                                children: List<Widget>.generate(
+                                  4,
+                                  (index) => Padding(
+                                    child: Row(
+                                      children: [
+                                        Text("شراء وتوصيل",
+                                            style: MyTheme.defaultAppTextTheme()
+                                                .textTheme
+                                                .bodyText1),
+                                        Spacer(),
+                                        Text("55 ر.س",
+                                            style: MyTheme.defaultAppTextTheme()
+                                                .textTheme
+                                                .bodyText1),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 15, right: 15),
+                                  ),
                                 ),
-                                padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
                               ),
                               Divider(
                                 color: Colors.white,
@@ -160,15 +143,28 @@ class FatorahPage extends StatelessWidget {
                               Padding(
                                 child: Row(
                                   children: [
-                                    Text("رسوم خدمة الموقع",
+                                    Text("خصم كوبون ",
                                         style: MyTheme.defaultAppTextTheme()
                                             .textTheme
                                             .headline2),
-                                    Spacer(),
-                                    Text("55 ر.س",
-                                        style: MyTheme.defaultAppTextTheme()
-                                            .textTheme
-                                            .headline2),
+                                    Utils.hSpace(20),
+                                    Expanded(
+                                      child: TextField(
+                                        decoration: InputDecoration.collapsed(
+                                            hintText: "ضع رمز الخصم",
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {},
+                                      child: Text("تاكيد",style: TextStyle(color: MyTheme.mainAppBlueColor),),
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Colors.white),
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 padding:
@@ -252,59 +248,49 @@ class FatorahPage extends StatelessWidget {
                         onChanged: (val) {
                           state(() => _checked = !_checked);
                         },
-                        title: Text(
-                          "أتعهد  عند  طلب الإلغاء يكون  قبل  12 ساعة أو بالاتفاق مع  العميل  حتى لاتتحمل مسؤلية تعطل مصالح العميل",
+                        title: RichText(
                           textAlign: TextAlign.end,
+                          text: TextSpan(
+                            text:  "أتعهد  عند  طلب الإلغاء يكون  قبل  12 ساعة أو بالاتفاق مع المسافر مع عدم  تعطيل مصالحه ",
+                            style: TextStyle(color: Colors.black54),
+                            children: [
+                              TextSpan(
+                                text: ' راجع سياسة التطبيق ',
+                                style: TextStyle(color: Colors.brown),
+                              )
+                            ]
+                          ),
                         ),
                         value: _checked,
                       ),
                     )),
                 Utils.vSpace(20),
-                BlocConsumer<FatorahCubit, FatorahState>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    return ElevatedButton(
-                      onPressed: !(state is InitialFatorahState) &&
-                              fatorahCubit.fatorahValidation()
-                          ? () {
-                        fatorahCubit.createNewFatorah(chatId: 1);
-                        Navigator.pop(context,true);
-                      }
-                          : null,
-                      child: Text("ارسل الفاتورة"),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(MyTheme.mainAppColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Utils.hSpace(20),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text("دفع الكتروني "),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              MyTheme.mainAppBlueColor),
+                        ),
                       ),
-                    );
-                  },
+                    ),
+                    Utils.hSpace(10),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: Text("رفض"),
+                        style: ButtonStyle(),
+                      ),
+                    ),
+                    Utils.hSpace(20),
+                  ],
                 ),
                 Utils.vSpace(10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "تنبيه",
-                          style:
-                              MyTheme.defaultAppTextTheme().textTheme.overline,
-                        ),
-                        Text(
-                          "-  يجب كتابة ماهي الخدمة",
-                        ),
-                        Text(
-                          "-  يجب تحدد سعر  الخدمة ",
-                        ),
-                        Text(
-                          "-  يجب أضافة  الخدمة",
-                        ),
-                      ],
-                    ),
-                  ),
-                )
               ],
             ),
           ),

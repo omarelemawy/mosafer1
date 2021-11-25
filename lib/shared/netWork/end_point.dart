@@ -4,3 +4,4 @@ const String getChatRoomsUrl = 'auth/masafr/get-chat-rooms';
 const String addNewFatorahUrl = 'auth/masafr/create-fatoorah';
 const String notificationsUrl = 'auth/user/get-notifications';
 const String createChatRoom =  'auth/user/get-chat-rooms';
+const String negotiationUrl = 'auth/user/negotiation';

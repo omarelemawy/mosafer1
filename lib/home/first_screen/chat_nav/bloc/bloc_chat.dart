@@ -4,14 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/state_chat.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/shared/netWork/Api.dart';
 import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
+import 'package:mosafer1/shared/netWork/end_point.dart';
 
 class ChatBloc extends Cubit<ChatStates> {
 
   ChatBloc() : super(LoadingChatStates());
   ChatData _chatData = ChatData();
   final ImagePicker _picker = ImagePicker();
-
+  HttpOps _httpOps = HttpOps();
   static ChatBloc get(context) => BlocProvider.of(context);
   List<Message> messages = [];
   List<ChatRoom> chatRooms = [];
@@ -40,6 +42,21 @@ class ChatBloc extends Cubit<ChatStates> {
     //GetAllRequestServicesModel requestServicesModel = await _chatData.getChatRooms(1);
     //chatRooms = ChatRoom.toList(requestServicesModel.dataObj);
     return _chatData.getChatRooms(1);
+  }
+
+  Future<String> createNegotiationRequest({int request_id,int chat_id}) async {
+    var data = {
+      "request_id":request_id,
+      "chat_id":chat_id
+    };
+
+    GetAllRequestServicesModel responseModel = await _httpOps.postData(endPoint: negotiationUrl,auth: true , mapData: data);
+    print("Msg : ${responseModel.dataObj["subject"]}");
+    if(responseModel.status){
+      return responseModel.dataObj["subject"];
+    }else{
+      return "";
+    }
   }
 
   void selectAndGetImagePath({bool isCamera = false}) async {

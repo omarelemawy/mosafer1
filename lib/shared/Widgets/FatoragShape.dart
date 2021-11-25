@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 class FatorahCustomPainter extends CustomPainter {
   @override
@@ -64,7 +65,7 @@ class FatorahCustomPainter extends CustomPainter {
     path.close();
 
     Paint paint_0_fill = Paint()..style=PaintingStyle.fill;
-    paint_0_fill.color = Color(0xff638462).withOpacity(1.0);
+    paint_0_fill.color = MyTheme.mainAppBlueColor;
     canvas.drawPath(path,paint_0_fill);
 
   }
