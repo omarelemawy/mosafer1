@@ -9,6 +9,8 @@ import 'package:mosafer1/login/first_screen.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 
+import 'home/first_screen/Search/bloc/searchCubit.dart';
+
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,7 @@ void main() async{
         BlocProvider<BottomNavigationBloc>(create: (context) => BottomNavigationBloc(),),
         BlocProvider<FatorahCubit>(create: (context) => FatorahCubit(),),
         BlocProvider<NotifiBloc>(create: (context) => NotifiBloc(),),
+        BlocProvider<SearchCubit>(create: (context) => SearchCubit(),),
       ],
       child: MyApp()
   ));

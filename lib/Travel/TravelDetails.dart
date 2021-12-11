@@ -4,6 +4,7 @@ import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Constats.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
@@ -20,6 +21,14 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
   Size size;
   ChatData _chatData = ChatData();
 
+  List categories = [
+    "شحنات خفيفة",
+    "خدمات مدن",
+    "شحنات  كبيرة ",
+    "أطعمة  وهديا",
+    "نبات وحيوانات",
+    "ركاب"
+  ];
   @override
   void initState() {
     polylinePoints = [
@@ -34,6 +43,8 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
     size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text("تفاصيل  الخدمة"),
         leading: TextButton(
           child: Icon(
             Icons.arrow_back_ios,
@@ -89,14 +100,14 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      widget.requestServices.user.photo),
+                  backgroundImage:
+                  widget.requestServices.user != null ? NetworkImage(widget.requestServices.user.photo) : AssetImage("assets/placeholderuser.png"),
                   radius: 35,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
-                    widget.requestServices.user.name,
+                    widget.requestServices.user != null ? widget.requestServices.user.name : "- - - -",
                     style: TextStyle(color: Colors.white),
                   ),
                   padding: const EdgeInsets.only(
@@ -105,17 +116,6 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                       color: MyTheme.mainAppBlueColor,
                       borderRadius: BorderRadius.circular(20)),
                 ),
-                Container(
-                  child: Text(
-                    "المسافة ٠٠٠ كيلو",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 5, bottom: 5),
-                  decoration: BoxDecoration(
-                      color: MyTheme.mainAppBlueColor,
-                      borderRadius: BorderRadius.circular(20)),
-                )
               ],
             ),
             padding: const EdgeInsets.all(15),
@@ -124,23 +124,32 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Padding(
-                child: ElevatedButton(onPressed: ()
-                {
-                  _chatData.getOrCreateChatRoom(1 , 1).then((value) {
-                    print("Chat room : ${value}");
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatMessengerScreen()));
-                  });
-
-                }, child: Text("تفاوض"),style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(MyTheme.mainAppBlueColor),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                ),),
+              if(CacheHelper.getData(key: "id") != null ) Padding(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if(widget.requestServices.user != null && CacheHelper.getData(key: "id") != null){
+                      _chatData.getOrCreateChatRoom(CacheHelper.getData(key: "id"), int.parse(widget.requestServices.userId)).then((value) {
+                        print("Chat room : ${value}");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatMessengerScreen(chatRoomId: value,)));
+                      });
+                    }
+                  },
+                  child: Text("تفاوض"),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyTheme.mainAppBlueColor),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)))),
+                ),
                 padding: const EdgeInsets.all(15),
               ),
               SlidingUpPanel(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15)),
                 minHeight: size.height * 0.3,
                 maxHeight: size.height * 0.5,
                 color: MyTheme.mainAppBlueColor,
@@ -181,24 +190,46 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              widget.requestServices.typeOfCar.isNotEmpty ?  Text("مطلوب سيارة ") : SizedBox(),
-                              SizedBox(),
-                              widget.requestServices.haveInsurance == "" ? Text("مطلوب تامين" + " : " + widget.requestServices.insuranceValue + "ر.س") : SizedBox(),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              widget.requestServices.onlyWomen == "" ? Stack(
+                              Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Container(
-                                    width: 150,
+                                    width: 160,
                                     height: 30,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        color:
-                                        MyTheme.mainAppBlueColor.withOpacity(0.4)),
+                                        color: MyTheme.mainAppBlueColor
+                                            .withOpacity(0.4)),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        child: SVGIcons.plane,
+                                        padding: const EdgeInsets.only(
+                                            bottom: 5, right: 10),
+                                      ),
+                                      Text(
+                                        "رحلة رقم : " +
+                                            "${widget.requestServices.id}",
+                                        style: TextStyle(
+                                            color: MyTheme.mainAppBlueColor),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 160,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: MyTheme.mainAppBlueColor
+                                            .withOpacity(0.4)),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -210,53 +241,64 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                                         ),
                                       ),
                                       Text(
-                                        "مطلوب سيدة",
-                                        style:
-                                        TextStyle(color: MyTheme.mainAppBlueColor),
+                                        "خدمات للنساء فقط",
+                                        style: TextStyle(
+                                            color: MyTheme.mainAppBlueColor),
                                       )
                                     ],
                                   )
                                 ],
-                              ) : SizedBox(),
-                              SizedBox(),
-                              Container(
-                                child: Text(
-                                  "توصيل طعام",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: MyTheme.mainAppColor),
                               ),
                             ],
                           ),
-                          Text(widget.requestServices.description.isEmpty ? "لا يوجد تفاصيل" : widget.requestServices.description,
+                          Text(
+                            widget.requestServices.description.isEmpty
+                                ? "لا يوجد تفاصيل"
+                                : widget.requestServices.description,
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context,index)=> Container(
-                                child: ClipRRect(
-                                  child: FadeInImage.assetNetwork(placeholder: placeholder2, image: 'https://www.iihs.org/api/ratings/model-year-images/3112/636/',),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15)
-                                ),
-                                width: 120,
-                                margin: const EdgeInsets.all(8),
-                              ),
+                          Container(
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: MyTheme.mainAppBlueColor),
                             ),
-                            height: 120,
-                            width: size.width,
-                          )
+                            child: Wrap(
+                              children: List<Widget>.generate(
+                                  categories.length,
+                                  (index) => Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Checkbox(
+                                              value: true, onChanged: (val) {}),
+                                          Text(categories[index])
+                                        ],
+                                      )),
+                            ),
+                          ),
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Container(
+                               child: FadeInImage.assetNetwork(
+                                 placeholder: placeholder2,
+                                 image:
+                                 'https://www.iihs.org/api/ratings/model-year-images/3112/636/',
+                                 fit: BoxFit.cover,
+                               ),
+                               clipBehavior: Clip.antiAlias,
+                               decoration:
+                               BoxDecoration(shape: BoxShape.circle),
+                               width: 130,
+                               height: 130,
+                               margin: const EdgeInsets.all(10),
+                             ),
+                             Text("Honda Civik 2021",style: TextStyle(fontSize: 18),)
+                           ],
+                         )
                         ],
                       ),
-                    )
-                ),
+                    )),
               ),
             ],
           )

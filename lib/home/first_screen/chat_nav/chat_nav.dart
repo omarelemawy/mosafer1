@@ -7,6 +7,7 @@ import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
 import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Widgets/CustomAppBar.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 
 
 class ChatNav extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ChatNavState extends State<ChatNav> {
   @override
   void initState() {
     chatBloc = BlocProvider.of<ChatBloc>(context);
-    chatBloc.getChatRooms(1);
+    chatBloc.getChatRooms(CacheHelper.getData(key: "id"));
     super.initState();
   }
   @override
@@ -33,7 +34,7 @@ class _ChatNavState extends State<ChatNav> {
         appBar: PreferredSize(child: CustomAppBar(title: "المحادثات",),preferredSize: Size.fromHeight(60),),
         body: Center(
           child: FutureBuilder<List<ChatRoom>>(
-            future: chatBloc.getChatRooms(1),
+            future: chatBloc.getChatRooms(CacheHelper.getData(key: "id")),
             builder: (context,snap){
               print("Snap : ${snap}");
               if(snap.hasData) {

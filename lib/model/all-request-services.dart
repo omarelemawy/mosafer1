@@ -233,6 +233,8 @@ class RequestServices {
     }
     return data;
   }
+
+  static List<RequestServices> toList(List jsonData) => jsonData.map((map) => RequestServices.fromJson(map)).toList();
 }
 
 class User {
@@ -522,6 +524,7 @@ class Notifications {
 
   static List<Notifications> toList(List data) => data.map((map) => Notifications.fromMap(map)).toList();
 }
+
 class ChatRoom {
   int id;
   Message lastMessage;
@@ -534,11 +537,131 @@ class ChatRoom {
     return ChatRoom(
       id: map["id"],
       lastMessage: Message(message: "",user: User.forChat(1, "name", "photo", "idPhoto", "email")),
-      client: User.fromJson(map["user"]),
+      client: User.fromJson(map["masafr"]),
     );
   }
 
   static List<ChatRoom> toList(List data) => data.map((chatRoomMap) => ChatRoom.fromMap(chatRoomMap)).toList();
+}
+
+
+class Complaint {
+  final int id;
+  final User user;
+  final User masafr;
+  final String related_trip;
+  final String related_request_service;
+  final String status;
+  final bool solved;
+  final int user_negative;
+  final int masafrNegative;
+  final int complainant;
+  final String reason;
+  String created_at;
+
+
+  Complaint(
+  {
+    this.id,
+    this.user,
+    this.masafr,
+    this.related_trip,
+    this.related_request_service,
+    this.status,
+    this.solved,
+    this.user_negative,
+    this.masafrNegative,
+    this.complainant,
+    this.reason,
+    this.created_at
+  });
+
+  factory Complaint.fromMap(Map map) {
+    return Complaint(
+      id: map["id"],
+      user: User.forChat(int.parse(map["user_id"]), "", "", "", ""),
+      masafr: User.forChat(int.parse(map["masafr_id"]), "", "", "", ""),
+      complainant: int.parse(map["complainant"]),
+      masafrNegative: int.parse(map["masafr_negative"]),
+      reason: map["reason"],
+      created_at: map["created_at"],
+      related_request_service: map["related_request_service"],
+      related_trip: map["related_trip"],
+      status: map["status"],
+      solved: map["solved"] == "1" ? true : false,
+      user_negative: int.parse( map["masafr_negative"])
+
+    );
+  }
+
+  static List<Complaint> toList(List data) => data.map((chatRoomMap) => Complaint.fromMap(chatRoomMap)).toList();
+}
+
+class ComplaintRoom {
+  int id;
+  String senderType;
+  String subject;
+  String chat_id;
+  User mosafer;
+  User client;
+
+  ComplaintRoom({this.id, this.senderType,this.subject,this.chat_id,this.mosafer,this.client,});
+
+  factory ComplaintRoom.fromMap(Map map) {
+    return ComplaintRoom(
+      id: map["id"],
+//      mosafer: User.fromJson(map["user"]),
+//      client: User.fromJson(map["user"]),
+      chat_id: map["chat_id"],
+      subject: map["subject"],
+      senderType: map["sender_type"]
+    );
+  }
+
+}
+
+class FatorahModel {
+
+  int id;
+  String requestTripId;
+  String createdAt;
+  bool accepted;
+  List<FatorahsItems> fatorahItems;
+
+  FatorahModel({this.id, this.requestTripId,this.createdAt,this.accepted,this.fatorahItems});
+
+  factory FatorahModel.fromMap(Map map) {
+    return FatorahModel(
+      id: map["id"]??0,
+      accepted: ( map["accepted"] == "-1" || map["accepted"] == "0") ? false : true,
+      createdAt: map["created_at"]??"",
+      requestTripId: map["request_trip_id"]??"1",
+      fatorahItems: FatorahsItems.toList(map["fatoorah"])
+    );
+  }
+
+}
+
+class FatorahsItems {
+  int id;
+  String fatoorahListId;
+  String subject;
+  String value;
+  bool isFree;
+
+  FatorahsItems({this.id, this.fatoorahListId, this.subject, this.value, this.isFree});
+
+  factory FatorahsItems.fromMap(Map map) {
+    return FatorahsItems(
+      id: map["id"]??0,
+      fatoorahListId: map["fatoorah_list_id"]??"0",
+      subject:  map["subject"]??"",
+      value: map["value"]??"0",
+      isFree: map["is_fee_insurance"] == "1"
+    );
+  }
+
+  static List<FatorahsItems> toList(List data) => data.map((map)=>FatorahsItems.fromMap(map)).toList() ;
 }
 
 class FatorahService {
@@ -555,6 +678,22 @@ enum MessageType {
   Complaint,
   Reset,
   Request
+}
+
+class SearchCategoriesModel {
+  String name;
+  String photo ;
+  int id;
+  SearchCategoriesModel({this.id, this.name,this.photo});
+  factory SearchCategoriesModel.fromMap(Map map) {
+    return SearchCategoriesModel(
+      id: map["id"],
+      name: map["categorie_name"],
+      photo: map["photo"]
+    );
+  }
+
+  static List<SearchCategoriesModel> toList(List data) => data.map((map) => SearchCategoriesModel.fromMap(map)).toList();
 }
 
 extension ToString on MessageType {

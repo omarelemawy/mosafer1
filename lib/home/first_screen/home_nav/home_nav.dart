@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/Travel/TravelDetails.dart';
@@ -35,186 +37,285 @@ class _HomeNavState extends State<HomeNav> {
             body: state is GetLoadingAllRequestServicesStates?
             Center(child: CircularProgressIndicator()):Padding(
               padding: const EdgeInsets.only(bottom: 20.0,top: 10,right: 10,left: 10),
-              child: ListView.separated(itemBuilder: (context,index)=>
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: HexColor("#90AC7A")),),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor:MyTheme.mainAppBlueColor,
-                                        radius: 40,
-                                        backgroundImage: NetworkImage(allRequestsSe[index].photo),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CircleAvatar(
-                                          child: Icon(Icons.check,color:Colors.white,size:12,),
-                                          backgroundColor: Colors.green,
-                                          radius: 7,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  RatingBar.builder(
-                                    initialRating: 3,
-                                    minRating: 1,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    itemSize: 15,
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: HexColor("#F7FF03"),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 7),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: ListView.separated(itemBuilder: (context,index)=>
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color:MyTheme.mainAppBlueColor),),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Column(
                                   children: [
-                                    Row(
+                                    Stack(
+                                      alignment: Alignment.bottomRight,
                                       children: [
-                                        Text("Client :",
-                                          style: TextStyle(fontFamily: "beIN",
-                                              fontWeight: FontWeight.bold,
-                                              color:HexColor("#707070")
-                                          ),),
-                                        Expanded(
-                                          child: Text(allRequestsSe[index].user==null?"":
-                                          allRequestsSe[index].user.name,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(fontFamily: "beIN",
-                                                  fontWeight: FontWeight.bold,
-                                                  color:HexColor("#707070")
-                                              )),
-                                        )
+                                        CircleAvatar(
+                                          backgroundColor:MyTheme.mainAppBlueColor,
+                                          radius: 40,
+                                          backgroundImage: allRequestsSe[index].user != null ? NetworkImage(allRequestsSe[index].user.photo) : AssetImage('assets/placeholderuser.png'),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CircleAvatar(
+                                            child: Icon(Icons.check,color:Colors.white,size:12,),
+                                            backgroundColor: Colors.green,
+                                            radius: 7,
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.location_on,color: HexColor("#638462"),),
-                                        Text(allRequestsSe[index].fromPlace==null?"":
-                                        allRequestsSe[index].fromPlace,
-                                          style: TextStyle(fontFamily: "beIN",
-                                              fontWeight: FontWeight.bold,
-                                              color:HexColor("#707070")
-                                          ),),
-                                        Icon(Icons.chevron_right_rounded),
-                                        Expanded(
-                                          child: Text(allRequestsSe[index].toPlace==null?
-                                          "":allRequestsSe[index].toPlace,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(fontFamily: "beIN",
-                                                  fontWeight: FontWeight.bold,
-                                                  color:HexColor("#707070")
-                                              )),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text("Description",
-                                          style: TextStyle(fontFamily: "beIN",
-                                              fontWeight: FontWeight.bold,
-                                              color:HexColor("#707070")
-                                          ),),
-                                        Icon(Icons.chevron_right_rounded),
-                                        Expanded(
-                                          child: Text(allRequestsSe[index].description==null?"":
-                                          allRequestsSe[index].description,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(fontFamily: "beIN",
-                                                  fontWeight: FontWeight.bold,
-                                                  color:HexColor("#707070")
-                                              )),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text("Order Expires In",
-                                          style: TextStyle(fontFamily: "beIN",
-                                              fontWeight: FontWeight.bold,
-                                              color:HexColor("#707070")
-                                          ),),
-                                        Icon(Icons.chevron_right_rounded),
-                                        Text(allRequestsSe[index].maxDay==null?"":
-                                        allRequestsSe[index].maxDay, style: TextStyle(fontFamily: "beIN",
-                                            fontWeight: FontWeight.bold,
-                                            color:HexColor("#707070")
-                                        ))
-                                      ],
+                                    RatingBar.builder(
+                                      initialRating: allRequestsSe[index].user != null ? int.parse(allRequestsSe[index].user.rate).toDouble() : 1.0,
+                                      minRating: 1,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemSize: 15,
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: MyTheme.mainAppBlueColor,
+                                      ),
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),
-                                    bottomLeft: Radius.circular(15)),
-                                color : MyTheme.mainAppBlueColor,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  SizedBox(width: 10,),
-                                  Image.asset("assets/icon_home.png"),
-                                  Spacer(),
-                                  ElevatedButton(onPressed: (){
-                                    Navigator.push(context, MaterialPageRoute(builder:
-                                        (context)=> TravelDetailsPage(requestServices: allRequestsSe[index],)));
-                                  },
-                                      style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(Colors.white),
-                                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
-                                      )
-                                      , child: Row(
-                                        mainAxisSize: MainAxisSize.min,
+                                SizedBox(width: 7),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                                    children: [
+                                      Row(
                                         children: [
-                                          Text("دخول",style:
-                                          TextStyle(fontFamily: "beIN",fontSize: 14,color: MyTheme.mainAppColor),),
-                                          Icon(Icons.chevron_right,color: MyTheme.mainAppColor,),
+                                          Text("المسافر :",
+                                            style: TextStyle(fontFamily: "beIN",
+                                                fontWeight: FontWeight.bold,
+                                                color:HexColor("#707070")
+                                            ),),
+                                          Expanded(
+                                            child: Text(allRequestsSe[index].user==null?"":
+                                            allRequestsSe[index].user.name,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(fontFamily: "beIN",
+                                                    fontWeight: FontWeight.bold,
+                                                    color:HexColor("#707070")
+                                                )),
+                                          )
                                         ],
-                                      ))
-                                  ,
-                                  SizedBox(width: 10,),
-                                ],
-                              ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.location_on,color:MyTheme.mainAppBlueColor,),
+                                          Text(allRequestsSe[index].fromPlace==null?"":
+                                          allRequestsSe[index].fromPlace,
+                                            style: TextStyle(fontFamily: "beIN",
+                                                fontWeight: FontWeight.bold,
+                                                color:HexColor("#707070")
+                                            ),),
+                                          Icon(Icons.chevron_right_rounded),
+                                          Expanded(
+                                            child: Text(allRequestsSe[index].toPlace==null?
+                                            "":allRequestsSe[index].toPlace,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(fontFamily: "beIN",
+                                                    fontWeight: FontWeight.bold,
+                                                    color:HexColor("#707070")
+                                                )),
+                                          )
+                                        ],
+                                      ),
+                                      if(allRequestsSe[index].description.isNotEmpty)
+                                        Text(allRequestsSe[index].description,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(fontFamily: "beIN",
+                                                fontWeight: FontWeight.bold,
+                                                color: MyTheme.mainAppBlueColor.withOpacity(0.7)
+                                            )),
+                                    FittedBox(child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.watch_later,
+                                              size: 20,
+                                              color: MyTheme.mainAppBlueColor,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text("ينتهي الطلب خلال"),
+                                          ],
+                                        ),
+                                        SizedBox(width: 9,),
+                                        CountdownTimer(
+                                          endTime: DateTime.parse(allRequestsSe[index].maxDay).millisecondsSinceEpoch,
+                                          widgetBuilder: (_, CurrentRemainingTime time) {
+                                            if (time == null) {
+                                              return Text("طلب منتهي");
+                                            }
+                                            return  Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Text(
+                                                      "يوم",
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                    CircleAvatar(
+                                                      child: FittedBox(
+                                                        child: Text(
+                                                          "${time.days}",
+                                                          style: TextStyle(
+                                                              fontSize: 16, color: Colors.white),
+                                                        ),
+                                                      ),
+                                                      backgroundColor: MyTheme.mainAppBlueColor
+                                                          .withOpacity(0.6),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Text(
+                                                      "ساعة",
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                    CircleAvatar(
+                                                      child: FittedBox(
+                                                        child: Text(
+                                                          "${time.hours}",
+                                                          style: TextStyle(
+                                                              fontSize: 16, color: Colors.white),
+                                                        ),
+                                                      ),
+                                                      backgroundColor: MyTheme.mainAppBlueColor
+                                                          .withOpacity(0.6),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Text(
+                                                      "دقيقة",
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                    CircleAvatar(
+                                                      child: FittedBox(
+                                                        child: Text(
+                                                          "${time.min}",
+                                                          style: TextStyle(
+                                                              fontSize: 16, color: Colors.white),
+                                                        ),
+                                                      ),
+                                                      backgroundColor: MyTheme.mainAppBlueColor
+                                                          .withOpacity(0.6),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Text(
+                                                      "ثانية",
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                    CircleAvatar(
+                                                      child: FittedBox(
+                                                        child: Text(
+                                                          "${time.sec}",
+                                                          style: TextStyle(
+                                                              fontSize: 16, color: Colors.white),
+                                                        ),
+                                                      ),
+                                                      backgroundColor: MyTheme.mainAppBlueColor
+                                                          .withOpacity(0.6),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),)
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                          ],
-                        )
-                      ],
+                          ),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15)),
+                                  color : MyTheme.mainAppBlueColor,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 0),
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: 10,),
+                                    TextButton(onPressed: (){}, child: Icon(Icons.share,color: Colors.white,),),
+                                    Spacer(),
+                                    ElevatedButton(onPressed: (){
+                                      Navigator.push(context, MaterialPageRoute(builder:
+                                          (context)=> TravelDetailsPage(requestServices: allRequestsSe[index],)));
+                                    },
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Colors.white),
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                                        )
+                                        , child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text("دخول",style:
+                                            TextStyle(fontFamily: "beIN",fontSize: 14,color: MyTheme.mainAppBlueColor),),
+                                            Icon(Icons.chevron_right,color: MyTheme.mainAppBlueColor,),
+                                          ],
+                                        ))
+                                    ,
+                                    SizedBox(width: 10,),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                itemCount: allRequestsSe.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 20,);
-                },
+                  itemCount: allRequestsSe.length,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(height: 20,);
+                  },
+                ),
               ),
             ),
           );

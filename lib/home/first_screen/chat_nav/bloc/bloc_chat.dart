@@ -11,6 +11,7 @@ import 'package:mosafer1/shared/netWork/end_point.dart';
 class ChatBloc extends Cubit<ChatStates> {
 
   ChatBloc() : super(LoadingChatStates());
+
   ChatData _chatData = ChatData();
   final ImagePicker _picker = ImagePicker();
   HttpOps _httpOps = HttpOps();
@@ -18,6 +19,7 @@ class ChatBloc extends Cubit<ChatStates> {
   List<Message> messages = [];
   List<ChatRoom> chatRooms = [];
   String imagePath = "";
+
   void getMessages(var chatRoomId){
     _chatData.chatRoomStream(chatRoomId).listen((messageData) {
       List<Message> msgList = Message.toList(messageData);
@@ -41,7 +43,7 @@ class ChatBloc extends Cubit<ChatStates> {
   Future<List<ChatRoom>> getChatRooms(int userId) async {
     //GetAllRequestServicesModel requestServicesModel = await _chatData.getChatRooms(1);
     //chatRooms = ChatRoom.toList(requestServicesModel.dataObj);
-    return _chatData.getChatRooms(1);
+    return _chatData.getChatRooms(userId);
   }
 
   Future<String> createNegotiationRequest({int request_id,int chat_id}) async {
@@ -54,6 +56,24 @@ class ChatBloc extends Cubit<ChatStates> {
     print("Msg : ${responseModel.dataObj["subject"]}");
     if(responseModel.status){
       return responseModel.dataObj["subject"];
+    }else{
+      return "";
+    }
+  }
+
+  Future<String> responseToFatorah({int request_id,int chat_id}) async {
+    var data = {
+      "fatoorah_list_id": 21,
+      "message_id": 1,
+      "payment_method":1,
+      "accept": 0,
+      "copon": ""
+    };
+
+    GetAllRequestServicesModel responseModel = await _httpOps.postData(endPoint: responseToFatorahUrl,auth: true , mapData: data);
+    print("Msg : ${responseModel.dataObj}");
+    if(responseModel.status){
+      return responseModel.dataObj["msg"];
     }else{
       return "";
     }

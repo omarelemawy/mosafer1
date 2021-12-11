@@ -1,16 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mosafer1/Complaint/bloc/cubit.dart';
+import 'package:mosafer1/Complaint/bloc/state.dart';
+import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Widgets/CustomExpandedFAB.dart';
+import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'dart:ui' as ui;
 
 class ComplaintInfoPage extends StatefulWidget {
+  final Complaint complaint;
+  const ComplaintInfoPage({Key key, this.complaint}) : super(key: key);
   @override
   _ComplaintInfoPageState createState() => _ComplaintInfoPageState();
 }
 
 class _ComplaintInfoPageState extends State<ComplaintInfoPage> {
   TextEditingController _subjectController = TextEditingController();
+  TextEditingController _chatController = TextEditingController();
+  ChatData _chatData = ChatData();
   @override
   void initState() {
     _subjectController.text = "الموضوع ....";
@@ -32,92 +43,110 @@ class _ComplaintInfoPageState extends State<ComplaintInfoPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IntrinsicHeight(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
+                BlocProvider(
+                  create: (context)=> ComplainRoomCubit()..getComplaintRoomInfo(msaferId: widget.complaint.masafr.id,userId:widget.complaint.user.id ),
+                  child: BlocConsumer<ComplainRoomCubit,ComplaintRoomState>(
+                    builder: (context,state){
+                      if(state is ComplaintRoomLoadedSuccessState)
+                      {
+                        _subjectController.text = state.complaintRoom.subject;
+                        return Column(
                           children: [
-                            Text(
-                              "عميل موثوق",
-                              style: TextStyle(
-                                  color: MyTheme.mainAppColor,
-                                  fontWeight: FontWeight.bold),
+                            IntrinsicHeight(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "عميل موثوق",
+                                          style: TextStyle(
+                                              color: MyTheme.mainAppColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage: NetworkImage(
+                                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXjhzMO9qkPIXzK2vqlvhOt8uwkRfXZkzH7xv6uHjRwTdYH9fPJIzV1tQcgyDsGjAJ-c&usqp=CAU'),
+                                        ),
+                                        Text(
+                                          "ناصر فهد",
+                                        ),
+                                        Text(
+                                          "رقم الطلب : " + "${widget.complaint.related_request_service}",
+                                        )
+                                      ],
+                                    ),
+                                    Directionality(textDirection: state.complaintRoom.senderType == "0" ? ui.TextDirection.rtl : ui.TextDirection.ltr, child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back_ios,
+                                          color: MyTheme.mainAppBlueColor,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_back_ios,
+                                          color: MyTheme.mainAppBlueColor,
+                                        ),
+                                      ],
+                                    ),),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "مسافر ميز",
+                                          style: TextStyle(
+                                              color: MyTheme.mainAppColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage: NetworkImage(
+                                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXjhzMO9qkPIXzK2vqlvhOt8uwkRfXZkzH7xv6uHjRwTdYH9fPJIzV1tQcgyDsGjAJ-c&usqp=CAU'),
+                                        ),
+                                        Text(
+                                          "موسى محمد خالد",
+                                        ),
+                                        Text(
+                                          "رقم الرحلة : " + "${widget.complaint.related_trip}",
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXjhzMO9qkPIXzK2vqlvhOt8uwkRfXZkzH7xv6uHjRwTdYH9fPJIzV1tQcgyDsGjAJ-c&usqp=CAU'),
-                            ),
-                            Text(
-                              "ناصر فهد",
-                            ),
-                            Text(
-                              "رقم الطلب : " + "21",
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_back_ios,
+                            Container(
                               color: MyTheme.mainAppBlueColor,
+                              width: size.width,
+                              alignment: Alignment.center,
+                              child: Text(
+                                DateFormat.yMMMd().format(DateTime.parse(widget.complaint.created_at)),
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                            Icon(
-                              Icons.arrow_back_ios,
-                              color: MyTheme.mainAppBlueColor,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                enabled: false,
+                                controller: _subjectController,
+                                decoration: InputDecoration(
+                                    labelStyle: TextStyle(
+                                        fontSize: 24, color: MyTheme.mainAppBlueColor),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        borderSide:
+                                        BorderSide(color: MyTheme.mainAppBlueColor)),
+                                    labelText: "الموضوع"),
+                              ),
                             ),
                           ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "مسافر ميز",
-                              style: TextStyle(
-                                  color: MyTheme.mainAppColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXjhzMO9qkPIXzK2vqlvhOt8uwkRfXZkzH7xv6uHjRwTdYH9fPJIzV1tQcgyDsGjAJ-c&usqp=CAU'),
-                            ),
-                            Text(
-                              "موسى محمد خالد",
-                            ),
-                            Text(
-                              "رقم الرحلة : " + "21",
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  color: MyTheme.mainAppBlueColor,
-                  width: size.width,
-                  alignment: Alignment.center,
-                  child: Text(
-                    DateFormat.yMMMd().format(DateTime.now()),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    enabled: false,
-                    controller: _subjectController,
-                    decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            fontSize: 24, color: MyTheme.mainAppBlueColor),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide:
-                                BorderSide(color: MyTheme.mainAppBlueColor)),
-                        labelText: "الموضوع"),
+                        );
+                      }
+
+                      return Center(child: CircularProgressIndicator(),);
+                    },
+                    listener: (context,state){},
                   ),
                 ),
                 Padding(
@@ -126,10 +155,40 @@ class _ComplaintInfoPageState extends State<ComplaintInfoPage> {
                   child: Text("الردود"),
                 ),
                 Expanded(
-                    child: ListView.builder(
-                        itemBuilder: (context, index) => ComplaintReplyItem(
-                              index: index,
-                            )))
+                    child: BlocProvider(
+                      create: (context)=> ComplainChatCubit()..getMessages(widget.complaint.id),
+                      child: BlocConsumer<ComplainChatCubit,ComplainChatStates>(
+                        listener: (context,state){},
+                        builder: (context,state){
+                          if(state is ComplainChatLoadedSuccessState){
+                            return ListView.builder(
+                                reverse: true,
+                                itemCount: state.messages.length,
+                                padding:  EdgeInsets.only(bottom: size.height * 0.15),
+                                itemBuilder: (context, index) => ComplaintReplyItem(
+                                  message: state.messages[index],
+                                  index: index,
+                                ));
+                          }
+
+                          if(state is ComplainChatNewMessageState){
+                            return ListView.builder(
+                                reverse: true,
+                                itemCount: state.messages.length,
+                                padding:  EdgeInsets.only(bottom: size.height * 0.15),
+                                itemBuilder: (context, index) => ComplaintReplyItem(
+                                  message: state.messages[index],
+                                  index: index,
+                                ));
+                          }
+
+                          if(state is NoComplainChatState){
+                            return Center(child: Text("لا يوجد اي ردود حتي الان"),);
+                          }
+                          return Center(child: CircularProgressIndicator(),);
+                        },
+                      ),
+                    ))
               ],
             ),
             //Chat
@@ -217,6 +276,7 @@ class _ComplaintInfoPageState extends State<ComplaintInfoPage> {
                                 Expanded(
                                   child: Padding(
                                     child: TextField(
+                                      controller: _chatController,
                                       decoration: InputDecoration.collapsed(
                                           hintText: "ابدا المحادثة"),
                                     ),
@@ -225,7 +285,31 @@ class _ComplaintInfoPageState extends State<ComplaintInfoPage> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: () async {},
+                                  onPressed: () async {
+                                    if(_chatController.text.isNotEmpty){
+                                      Message message = Message(
+                                          user: User.forChat(
+                                            CacheHelper.getData(key: "id"),
+                                            CacheHelper.getData(key: "name"),
+                                            CacheHelper.getData(key: "photo"),
+                                            "idPhoto",
+                                            "email",
+                                          ),
+                                          message: _chatController.text,
+                                          messageImage: "",
+                                          additionalData: {
+                                            "code" : "",
+                                            "id" : "",
+                                            "message" : ""
+                                          },
+                                          messageType: MessageType.Complaint,
+                                          time: Timestamp.now().toString(),
+                                          seen: false,
+                                          isCurrentUser: true);
+                                      _chatData.sendMessage(message: message,chatRoomId: widget.complaint.id,isComplaint: true);
+                                      _chatController.clear();
+                                    }
+                                  },
                                   icon: Icon(
                                     Icons.send,
                                     color: MyTheme.mainAppBlueColor,
@@ -252,7 +336,8 @@ class _ComplaintInfoPageState extends State<ComplaintInfoPage> {
 class ComplaintReplyItem extends StatelessWidget {
   final int index;
   final VoidCallback onPress;
-  const ComplaintReplyItem({Key key, this.index, this.onPress})
+  final Message message;
+  const ComplaintReplyItem({Key key, this.message,this.index, this.onPress})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -275,7 +360,7 @@ class ComplaintReplyItem extends StatelessWidget {
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFXjhzMO9qkPIXzK2vqlvhOt8uwkRfXZkzH7xv6uHjRwTdYH9fPJIzV1tQcgyDsGjAJ-c&usqp=CAU'),
+                        message.user.photo),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -283,13 +368,13 @@ class ComplaintReplyItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "ناصر فهد",
+                          message.user.name,
                           style: TextStyle(
                               color: MyTheme.mainAppBlueColorBright
                                   .withOpacity(0.8)),
                         ),
                         Text(
-                          "هذه الشكوى غير صحية",
+                          message.message,
                           style: TextStyle(color: MyTheme.mainAppBlueColor),
                         ),
                       ],

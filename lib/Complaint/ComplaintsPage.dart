@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/Complaint/ComplaintInfoPage.dart';
+import 'package:mosafer1/Complaint/bloc/cubit.dart';
+import 'package:mosafer1/Complaint/bloc/state.dart';
 import 'package:mosafer1/MosaferProfile/MosaferProfilePage.dart';
+import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 
 class ComplaintesPage extends StatelessWidget {
@@ -14,18 +18,28 @@ class ComplaintesPage extends StatelessWidget {
       ),
       body: Directionality(
           textDirection: TextDirection.rtl,
-          child: ListView.builder(
-              itemCount: 9,
-              itemBuilder: (context, index) => ComplaintItem(
-                    index: index,
-                    onPress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ComplaintInfoPage()));
-                    },
-                    onUserPress: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> MosaferProfilePage())),
-                  ))),
+          child: BlocProvider(
+            create: (BuildContext context) => ComplainCubit()..getAllComplaints(),
+            child: BlocConsumer<ComplainCubit,ComplaintListState>(
+              listener: (context,state){},
+              builder: (context,state){
+                if(state is ComplaintListLoadedSuccessState) {
+                  return ListView.builder(
+                      itemCount: state.complaints.length,
+                      itemBuilder: (context, index) => ComplaintItem(
+                        complaint: state.complaints[index],
+                        index: index,
+                        onPress: () {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => ComplaintInfoPage(complaint: state.complaints[index],)));
+                        },
+                        onUserPress: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> MosaferProfilePage())),
+                      ));
+                }
+                return Center(child: CircularProgressIndicator(),);
+              },
+            ),
+          )),
     );
   }
 }
@@ -34,7 +48,8 @@ class ComplaintItem extends StatelessWidget {
   final int index;
   final VoidCallback onPress;
   final VoidCallback onUserPress;
-  const ComplaintItem({Key key, this.index, this.onPress, this.onUserPress})
+  final Complaint complaint;
+  const ComplaintItem({Key key, this.complaint,this.index, this.onPress, this.onUserPress})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -68,12 +83,13 @@ class ComplaintItem extends StatelessWidget {
                         child: FittedBox(
                           child: Text(
                             "مغلقة",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: complaint.solved ? Colors.white : MyTheme.mainAppBlueColor),
                           ),
                         ),
                         width: 60,
                         decoration: BoxDecoration(
-                            color: Colors.brown,
+                            color: complaint.solved ? Colors.brown : Colors.white,
+                            border: Border.all(color: Colors.brown, width: 1.5),
                             borderRadius: BorderRadius.circular(20)),
                         padding: const EdgeInsets.symmetric(
                             vertical: 5, horizontal: 15),
@@ -85,13 +101,13 @@ class ComplaintItem extends StatelessWidget {
                         child: FittedBox(
                           child: Text(
                             "مفتوحة",
-                            style: TextStyle(color: MyTheme.mainAppBlueColor),
+                            style: TextStyle(color: !complaint.solved ? Colors.white : MyTheme.mainAppBlueColor),
                           ),
                         ),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            border:
-                                Border.all(color: Colors.brown, width: 1.5)),
+                            color: !complaint.solved ? Colors.brown : Colors.white,
+                            border: Border.all(color: Colors.brown, width: 1.5)),
                         width: 60,
                         padding: const EdgeInsets.symmetric(
                             vertical: 5, horizontal: 15),
@@ -99,15 +115,15 @@ class ComplaintItem extends StatelessWidget {
                     ],
                   ),
                   Spacer(),
-                  Container(
-                    child: Text("سجلت نقطة سلبية",
+                  complaint.masafrNegative > 0  || complaint.user_negative > 0 ? Container(
+                    child: Text(" سجلت ${complaint.masafrNegative} نقطة سلبية ",
                         style: TextStyle(color: Colors.white)),
                     decoration: BoxDecoration(
                         color: HexColor('#C08B45'),
                         borderRadius: BorderRadius.circular(20)),
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  ),
+                  ) : SizedBox(),
                 ],
               ),
             ),
@@ -119,7 +135,7 @@ class ComplaintItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "رقم الطلب  : " + "$index",
+                    "رقم الطلب  : " + "${complaint.id}",
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(

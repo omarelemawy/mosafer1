@@ -25,6 +25,11 @@ class SVGIcons {
     height: 35,
   );
 
+  static SvgPicture plane = SvgPicture.asset(
+    "assets/plane.svg",
+    width: 35,
+    height: 35,
+  );
   static SvgPicture cars = SvgPicture.asset(
     "assets/car.svg",
     width: 20,

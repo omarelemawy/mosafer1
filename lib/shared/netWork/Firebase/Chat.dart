@@ -13,18 +13,25 @@ class ChatData {
   FirebaseStorage storage = FirebaseStorage.instance;
 
   HttpOps _httpOps = HttpOps();
+
   Stream<QuerySnapshot> chatRoomStream(var chatRoomId) => _firestore.collection("ChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
 
-  Future sendMessage({var chatRoomId , Message message}) async {
+  Stream<QuerySnapshot> complainChatRoomStream(var chatRoomId) => _firestore.collection("ComplaintChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
+
+  Future sendMessage({var chatRoomId , Message message,bool isComplaint = false}) async {
     String imgUrl = "";
     if(message.messageImage.isNotEmpty) {
       var uuid = Uuid().v1();
-      Reference ref = storage.ref('$chatRoomId/$uuid.jpg');
+      Reference ref = storage.ref(
+          isComplaint ? 'complaintsRef/$chatRoomId/$uuid.jpg' : '$chatRoomId/$uuid.jpg'
+      );
       TaskSnapshot taskSnapshot = await ref.putFile(File(message.messageImage)) ;
       imgUrl = await taskSnapshot.ref.getDownloadURL();
     }
     message.messageImage = imgUrl;
-    await _firestore.collection("ChatRooms/$chatRoomId/Messages").add(message.toMap());
+    await _firestore.collection(
+        isComplaint ? "ComplaintChatRooms/$chatRoomId/Messages" : "ChatRooms/$chatRoomId/Messages"
+    ).add(message.toMap());
     print("Sent");
   }
 

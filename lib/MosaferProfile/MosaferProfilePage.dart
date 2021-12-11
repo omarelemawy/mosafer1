@@ -27,8 +27,7 @@ class _MosaferProfilePageState extends State<MosaferProfilePage> {
       body: Directionality(
           textDirection: ui.TextDirection.rtl,
           child: BlocProvider(
-              create: (BuildContext context) =>
-                  DrawerCubit()..getgetMosaferInform(id: 1),
+              create: (BuildContext context) => DrawerCubit()..getgetMosaferInform(id: 1),
               child: BlocConsumer<DrawerCubit, DrawerState>(
                   listener: (BuildContext context, state) {},
                   builder: (BuildContext context, state) {

@@ -358,10 +358,10 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                             child: Padding(
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  Trips request = await Navigator.push(context, MaterialPageRoute(builder: (context) => MyTripsNav(context,isFromMain: false,)));
+                                                  RequestServices request = await Navigator.push(context, MaterialPageRoute(builder: (context) => MyTripsNav(context,isFromMain: false,)));
                                                   if(request != null){
                                                     print("Request : ${request.id}");
-                                                    String messageText = await chatBloc.createNegotiationRequest(request_id: request.id,chat_id: 1);
+                                                    String messageText = await chatBloc.createNegotiationRequest(request_id: request.id,chat_id: widget.chatRoomId);
                                                     if(messageText.isNotEmpty){
                                                       Message msg = Message(
                                                           user: User.forChat(

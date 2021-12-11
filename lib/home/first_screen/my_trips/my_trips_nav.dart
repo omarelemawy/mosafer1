@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/drawer/drawer.dart';
 
 import 'package:mosafer1/home/first_screen/my_trips/bloc/state_my_trips.dart';
 import 'package:mosafer1/login/login.dart';
+import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/model/get-my-trips.dart';
 import 'package:mosafer1/shared/Constats.dart';
 import 'package:mosafer1/shared/Widgets/CustomAppBar.dart';
@@ -24,7 +27,7 @@ class MyTripsNav extends StatelessWidget {
       create: (context) => MyTripsBloc()..getMyTrip(),
       child: BlocConsumer<MyTripsBloc, MyTripsStates>(
         builder: (context, state) {
-          List<Trips> allMyTrips = MyTripsBloc.get(context).allMyTrips;
+          List<RequestServices> allMyTrips = MyTripsBloc.get(context).allMyTrips;
           print("Trips : $allMyTrips");
           return CacheHelper.getData(key: "token") == null
               ? Scaffold(
@@ -83,7 +86,7 @@ class MyTripsNav extends StatelessWidget {
                             child: ListView.separated(
                               itemBuilder: (context, index) => RequestItem(
                                 isFromMain: isFromMain,
-                                trips: allMyTrips[index],
+                                request: allMyTrips[index],
                                 onTripClick: () {
                                   Navigator.pop(context,allMyTrips[index]);
                                 },
@@ -108,12 +111,16 @@ class MyTripsNav extends StatelessWidget {
 
 class RequestItem extends StatelessWidget {
   bool isFromMain;
-  Trips trips;
+  RequestServices request;
   VoidCallback onTripClick;
-  RequestItem({this.isFromMain = true, this.trips, this.onTripClick});
+  RequestItem({this.isFromMain = true, this.request, this.onTripClick});
 
+  Duration expireDate;
   @override
   Widget build(BuildContext context) {
+    expireDate =  DateTime.parse(request.maxDay).difference(DateTime.now());
+
+    print("Expire $expireDate");
     return IntrinsicHeight(
       child: Column(
         children: [
@@ -152,7 +159,7 @@ class RequestItem extends StatelessWidget {
                             height: 40,
                             child: FittedBox(
                               child: Text(
-                                "توصيل",
+                                request.service.categorieName,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -183,9 +190,9 @@ class RequestItem extends StatelessWidget {
                               SizedBox(
                                 width: 5,
                               ),
-                              Text(trips.fromPlace),
+                              Text(request.fromPlace),
                               Text("  >>  "),
-                              Text(trips.toPlace),
+                              Text(request.toPlace),
                             ],
                           ),
                           Row(
@@ -203,97 +210,106 @@ class RequestItem extends StatelessWidget {
                               Text("ينتهي الطلب خلال"),
                             ],
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Column(
+                          CountdownTimer(
+                            endTime: DateTime.parse(request.maxDay).millisecondsSinceEpoch,
+                            widgetBuilder: (_, CurrentRemainingTime time) {
+                              if (time == null) {
+                                return Text("طلب منتهي");
+                              }
+                              return  Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "يوم",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  CircleAvatar(
-                                    child: FittedBox(
-                                      child: Text(
-                                        "1",
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "يوم",
+                                        style: TextStyle(fontSize: 16),
                                       ),
-                                    ),
-                                    backgroundColor: MyTheme.mainAppBlueColor
-                                        .withOpacity(0.6),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "ساعة",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  CircleAvatar(
-                                    child: FittedBox(
-                                      child: Text(
-                                        "5",
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                      CircleAvatar(
+                                        child: FittedBox(
+                                          child: Text(
+                                            "${time.days}",
+                                            style: TextStyle(
+                                                fontSize: 16, color: Colors.white),
+                                          ),
+                                        ),
+                                        backgroundColor: MyTheme.mainAppBlueColor
+                                            .withOpacity(0.6),
                                       ),
-                                    ),
-                                    backgroundColor: MyTheme.mainAppBlueColor
-                                        .withOpacity(0.6),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "دقيقة",
-                                    style: TextStyle(fontSize: 16),
+                                  const SizedBox(
+                                    width: 8,
                                   ),
-                                  CircleAvatar(
-                                    child: FittedBox(
-                                      child: Text(
-                                        "40",
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "ساعة",
+                                        style: TextStyle(fontSize: 16),
                                       ),
-                                    ),
-                                    backgroundColor: MyTheme.mainAppBlueColor
-                                        .withOpacity(0.6),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "ثانية",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  CircleAvatar(
-                                    child: FittedBox(
-                                      child: Text(
-                                        "60",
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                      CircleAvatar(
+                                        child: FittedBox(
+                                          child: Text(
+                                            "${time.hours}",
+                                            style: TextStyle(
+                                                fontSize: 16, color: Colors.white),
+                                          ),
+                                        ),
+                                        backgroundColor: MyTheme.mainAppBlueColor
+                                            .withOpacity(0.6),
                                       ),
-                                    ),
-                                    backgroundColor: MyTheme.mainAppBlueColor
-                                        .withOpacity(0.6),
+                                    ],
                                   ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "دقيقة",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      CircleAvatar(
+                                        child: FittedBox(
+                                          child: Text(
+                                            "${time.min}",
+                                            style: TextStyle(
+                                                fontSize: 16, color: Colors.white),
+                                          ),
+                                        ),
+                                        backgroundColor: MyTheme.mainAppBlueColor
+                                            .withOpacity(0.6),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "ثانية",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      CircleAvatar(
+                                        child: FittedBox(
+                                          child: Text(
+                                            "${time.sec}",
+                                            style: TextStyle(
+                                                fontSize: 16, color: Colors.white),
+                                          ),
+                                        ),
+                                        backgroundColor: MyTheme.mainAppBlueColor
+                                            .withOpacity(0.6),
+                                      ),
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
-                          )
+                              );
+                            },
+                          ),
+
                         ],
                       )
                     ],
@@ -320,7 +336,7 @@ class RequestItem extends StatelessWidget {
                                       borderRadius:
                                           BorderRadius.circular(20)))),
                         ),
-                        Text("رقم الطلب :  232",
+                        Text(" رقم الطلب :  ${request.id}",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 16)),
                         IconButton(
