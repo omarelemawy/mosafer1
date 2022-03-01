@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mosafer1/home/drawer/drawer.dart';
-
 import 'package:mosafer1/home/first_screen/my_trips/bloc/state_my_trips.dart';
 import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/model/get-my-trips.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'bloc/bloc_my_trips.dart';
+import 'more_infor_my_trips.dart';
 
 class MyTripsNav extends StatelessWidget {
   BuildContext context1;
@@ -51,7 +51,12 @@ class MyTripsNav extends StatelessWidget {
             body: state is GetLoadingAllMyRequestServicesStates?
             Center(child: CircularProgressIndicator()):Padding(
               padding: const EdgeInsets.only(bottom: 20.0,top: 10,right: 10,left: 10),
-              child: ListView.separated(itemBuilder:
+              child:allMyTrips.isEmpty?
+                  Center(
+                    child: Text("لا يوجد لديك رحلات",style:
+                    TextStyle(color: MyTheme.mainAppColor,fontSize: 20),),
+                  ):
+              ListView.separated(itemBuilder:
                   (context,index)=>
                   Container(
                     decoration: BoxDecoration(
@@ -105,25 +110,6 @@ class MyTripsNav extends StatelessWidget {
                                   children: [
                                     Row(
                                       children: [
-                                        Text("Client :",
-                                          style: TextStyle(fontFamily: "beIN",
-                                              fontWeight: FontWeight.bold,
-                                              color:HexColor("#707070")
-                                          ),),
-                                        Expanded(
-                                          child: Text(allMyTrips[index].onProgress==null?"":
-                                          allMyTrips[index].onProgress,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(fontFamily: "beIN",
-                                                  fontWeight: FontWeight.bold,
-                                                  color:HexColor("#707070")
-                                              )),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
                                         Icon(Icons.location_on,color: HexColor("#638462"),),
                                         Text(allMyTrips[index].fromPlace==null?"":
                                         allMyTrips[index].fromPlace,
@@ -146,7 +132,7 @@ class MyTripsNav extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        Text("Description",
+                                        Text("الوصف",
                                           style: TextStyle(fontFamily: "beIN",
                                               fontWeight: FontWeight.bold,
                                               color:HexColor("#707070")
@@ -166,19 +152,55 @@ class MyTripsNav extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        Text("Order Expires In",
+                                        Text("سينتهي في",
                                           style: TextStyle(fontFamily: "beIN",
                                               fontWeight: FontWeight.bold,
                                               color:HexColor("#707070")
                                           ),),
                                         Icon(Icons.chevron_right_rounded),
-                                        Text(allMyTrips[index].description==null?"":
-                                        allMyTrips[index].description, style: TextStyle(fontFamily: "beIN",
+                                        Text(allMyTrips[index].endDate==null?"":
+                                        allMyTrips[index].endDate, style: TextStyle(fontFamily: "beIN",
                                             fontWeight: FontWeight.bold,
                                             color:HexColor("#707070")
                                         ))
                                       ],
                                     ),
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 12,),
+                                        GestureDetector(
+                                          onTap: (){
+                                            pushNewScreen(
+                                              context,
+                                              screen: MoreInformMyTrip(trips: allMyTrips[index],),
+                                              withNavBar: false, // OPTIONAL VALUE. True by default.
+                                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                                            );
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            decoration: BoxDecoration(
+                                                color: MyTheme.mainAppColor,
+                                                borderRadius: BorderRadius.circular(20)),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.chevron_left,color: Colors.white,),
+                                                Text(
+                                                  "معلومات أكتر",
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                       IconButton(onPressed: (){
+                                          MyTripsBloc.get(context).deleteTrip(allMyTrips[index].id,context);
+                                        }, icon:
+                                        Icon(Icons.delete_forever_outlined,color: MyTheme.mainAppColor,)),
+                                        SizedBox(width: 12,)
+                                      ],
+                                    )
                                   ],
                                 ),
                               )

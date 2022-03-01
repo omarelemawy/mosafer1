@@ -23,21 +23,30 @@ class LoginBloc extends Cubit<LoginStates>{
       'password': pass,
     };
     http.Response response = await http.post(APIURL, body: mapData);
-
-    if (response.statusCode == 200) {
+    var data = jsonDecode(response.body);
+    if (data["status"] == true )
+    {
       emit(LoginSuccessState());
-      var data = jsonDecode(response.body);
       var token = data['msg']['token'];
-      print(token);
+      var id = data['msg']['id'];
+      var name = data['msg']['name'];
+      var photo = data['msg']['photo'];
+      print("User : Token $token , id $id ");
       CacheHelper.saveData(key: 'token', value: token);
+      CacheHelper.saveData(key: 'id', value: id);
+      CacheHelper.saveData(key: 'name', value: name);
+      CacheHelper.saveData(key: 'photo', value: photo);
+      print("true");
 
       Navigator.pushAndRemoveUntil(
           context, MaterialPageRoute(builder: (context) =>
-       HomeScreen()), (context) => false);
+          HomeScreen()), (context) => false);
+      return true;
     } else
     {
       print(response.body);
-      emit(LoginErrorState("Please Check Email or Password"));
+      emit(LoginErrorState("تأكد من ادخال رقم هاتف ورقم مرور صحيح"));
+      return false;
     }
   }
   void getImage()

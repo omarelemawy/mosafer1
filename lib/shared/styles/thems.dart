@@ -29,12 +29,27 @@ class MyTheme {
         primaryColor: mainAppColor,
         primarySwatch: mainAppSwatchColor,
         scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: mainAppColor
+        ),
         fontFamily: "beIN",
         textTheme: const TextTheme(
           headline1: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 16
+          ),
+          headline4: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            letterSpacing: 0,
+            fontFamily: "Muli",
+          ),
+          headline5: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            letterSpacing: 0.25,
+            fontFamily: "Muli",
           ),
           bodyText1: TextStyle(
               color: Colors.white,

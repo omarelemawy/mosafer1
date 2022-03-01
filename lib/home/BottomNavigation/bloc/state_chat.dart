@@ -4,8 +4,11 @@ abstract class BottomNaviagionStates{}
 
 class InitialChatStates extends BottomNaviagionStates{}
 
-class EnabledState extends BottomNaviagionStates{}
+class LoadingAddState extends BottomNaviagionStates{}
 
-class DisabledState extends BottomNaviagionStates{}
+class LoadedAddState extends BottomNaviagionStates{
+  List<AddModel> addList;
+  LoadedAddState(this.addList);
+}
 
 class changeNavegatState extends BottomNaviagionStates{}

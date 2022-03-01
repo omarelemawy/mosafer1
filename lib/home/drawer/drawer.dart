@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/drawer/profile_page.dart';
+import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 class MyDrawer extends StatelessWidget {
 
@@ -12,28 +15,88 @@ class MyDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          Container(
+          CacheHelper.getData(key: "token") == null ? Container(
             height: 200,
-            decoration:BoxDecoration(
-              color:  HexColor("#638462"),
+            decoration: BoxDecoration(
+              color: MyTheme.mainAppColor,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 50,
+                  radius: 40,
                   backgroundColor: HexColor("#FFFFFF"),
                   backgroundImage: AssetImage("assets/man.png"),
                 ),
+              ],
+            ),
+          ) :
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            decoration: BoxDecoration(
+              color: MyTheme.mainAppColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("مسافر موثوق",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      height: 30,
+                      width: double.infinity,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(width: 10,),
+                        ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            height: 80,
+                            width: 80,
+                            placeholderCacheHeight: 80,
+                            placeholderCacheWidth: 80,
+                            placeholder: "assets/man.png",
+                            image: CacheHelper.getData(key: "photo"),
+                            imageErrorBuilder: (context,o,c)=>ClipOval(
+                              child: Image.asset(
+                                "assets/man.png",
+                                height: 80,
+                                width: 80,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        RatingBar.builder(
+                          ignoreGestures: true,
+                          initialRating: 4.0,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemSize: 20,
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: MyTheme.mainAppColor,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                Text(CacheHelper.getData(key: "name"),style: TextStyle(color: Colors.white,fontSize: 18),)
               ],
             ),
           ),
           SizedBox(height: 30,),
           GestureDetector(
             onTap: (){
-              /*Navigator.push(context, MaterialPageRoute(builder:
-                  (context)=>EdartElmshare()));*/
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen())
+                  , (route) => false);
             },
             child: Row(
               children: [

@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mosafer1/Fatorah/FatorahPage.dart';
 import 'package:mosafer1/home/BottomNavigation/bloc/bloc_chat.dart';
@@ -15,12 +13,10 @@ import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/state_chat.dart';
 import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Widgets/CustomExpandedFAB.dart';
-import 'package:mosafer1/shared/Widgets/DrawerBtn.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:speed_dial_fab/speed_dial_fab.dart';
 
 
 class ChatMessengerScreen extends StatefulWidget {
@@ -44,7 +40,6 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       bottomNavigationBloc = BlocProvider.of<BottomNavigationBloc>(context);
-      bottomNavigationBloc.toggleEnable(false);
 
       chatBloc = BlocProvider.of<ChatBloc>(context);
       chatBloc.getMessages("cjujAnyhD9PCtUP4f2OH");
@@ -606,7 +601,6 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
   void dispose() {
     _scrollController.dispose();
     _messageSendController.dispose();
-    bottomNavigationBloc.toggleEnable(true);
     super.dispose();
   }
 }

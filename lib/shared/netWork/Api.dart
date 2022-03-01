@@ -18,4 +18,15 @@ class HttpOps {
     print("Response data ${response.body}");
     return GetAllRequestServicesModel.fromJson(json.decode(response.body));
   }
+  Future<GetAllRequestServicesModel> getData(
+      {String endPoint, bool auth = true})
+  async {
+    http.Response response = await http.get(Uri.parse(mainUrl + endPoint),
+        headers: auth ? {
+          "Content-Type": "application/json; charset=UTF-8",
+          "authToken": _token,
+        } : {});
+    print("Response data : ${response.body}");
+    return GetAllRequestServicesModel.fromJson(json.decode(response.body));
+  }
 }

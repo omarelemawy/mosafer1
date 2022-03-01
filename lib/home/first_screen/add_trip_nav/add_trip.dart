@@ -7,6 +7,7 @@ import 'package:mosafer1/home/first_screen/add_trip_nav/more_info_add_trip.dart'
 import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/model/get-all-main-trip-categorires.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../drawer/drawer.dart';
 import 'bloc/bloc_add_trip.dart';
@@ -69,19 +70,15 @@ class AddTrip extends StatelessWidget {
                   Text("ماهي  نوع الرحلة  التي تريد الإعلان عنها  ؟", style:
                   TextStyle(
                       fontFamily: "beIN",
-                      color: HexColor("#8CADC2"),
+                      color:MyTheme.mainAppColor,
                       fontSize: 16
                   ),),
                   state is GetLoadingGetAllMainTripCategoriresStates
-                      ? CircularProgressIndicator()
-                      :
+                      ? CircularProgressIndicator():
                   Expanded(
                     child: GridView.builder(
                       padding: const EdgeInsets.all(5),
-                      itemCount: AddTripBloc
-                          .get(context)
-                          .AllMainCat
-                          .length,
+                      itemCount: 4,
                       itemBuilder: (BuildContext context, int index) {
                         return buildCard(context, index, AddTripBloc
                             .get(context)
@@ -118,7 +115,6 @@ class AddTrip extends StatelessWidget {
         }
         else {
           checkedIndex = index;
-
           scaffoldKey.currentState
               .showBottomSheet(
                 (context) => addTaskBottomSheet(context,subsectionsString),
@@ -134,8 +130,9 @@ class AddTrip extends StatelessWidget {
       },
       child: Stack(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(2),
+          Container(
+            padding: const EdgeInsets.all(2.0),
+            width: double.infinity,
             child: Card(
               color: checked ? HexColor("#E5F1DC") : Colors.white,
               shape: RoundedRectangleBorder(
@@ -144,6 +141,7 @@ class AddTrip extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment:CrossAxisAlignment.center,
                   children: [
                     Text(mainCat.categorieName,
                       style: TextStyle(color: HexColor("#638462"),
@@ -188,39 +186,42 @@ class AddTrip extends StatelessWidget {
   }
 
   Widget addTaskBottomSheet(context,subsectionsString) {
-    return Container(
-      height: 300,
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          subsectionsString.length == 0 ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
-            child: Text("No Subsections"),
-          ) : Container(
-            height: 200,
-            color: Colors.white,
-            child:SingleChildScrollView(
-              child: CheckboxGroup(
-                  labels:subsectionsString,
-                  onSelected: (List<String> checked) => print(checked.toString())
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 300,
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            subsectionsString.length == 0 ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
+              child: Text("No Subsections"),
+            ) : Container(
+              height: 200,
+              color: Colors.white,
+              child:SingleChildScrollView(
+                child: CheckboxGroup(
+                    labels:subsectionsString,
+                    onSelected: (List<String> checked) => print(checked.toString())
+                ),
               ),
             ),
-          ),
-          MaterialButton(
-            onPressed: () {
-              pushNewScreen(
-                context,
-                screen: MoreInfoAddTrip(AddTripBloc.get(context).AllMainCat[checkedIndex]),
-                withNavBar: false, // OPTIONAL VALUE. True by default.
-                pageTransitionAnimation: PageTransitionAnimation.fade,
-              );
-            },
-            color: HexColor("#90AC7A"),
-            child: Text("Send", style: TextStyle(color: Colors.white),),
-          )
-        ],
+            MaterialButton(
+              onPressed: () {
+                pushNewScreen(
+                  context,
+                  screen: MoreInfoAddTrip(AddTripBloc.get(context).AllMainCat[checkedIndex]),
+                  withNavBar: false, // OPTIONAL VALUE. True by default.
+                  pageTransitionAnimation: PageTransitionAnimation.fade,
+                );
+              },
+              color: HexColor("#90AC7A"),
+              child: Text("Send", style: TextStyle(color: Colors.white),),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -90,6 +91,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     count: boardingItems.length,
                     effect: const ExpandingDotsEffect(
                         dotColor: Colors.grey,
+                        activeDotColor: MyTheme.mainAppColor,
                         strokeWidth: 10,
                         dotHeight: 10,
                         dotWidth: 10,
@@ -128,12 +130,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ),
       Expanded(child: Image(image: AssetImage(model.url))),
       const SizedBox(height: 15,),
-      Center(child: Text(model.title, style: TextStyle(fontSize: 14,fontFamily: "beIN",color: HexColor("#5787A6"),
+      Center(child: Text(model.title, style:
+      TextStyle(fontSize: 14,fontFamily: "beIN",color: MyTheme.mainAppColor,
           fontWeight: FontWeight.bold),)),
       const SizedBox(height: 2,),
       Center(child: Text(model.body1, style: TextStyle(fontSize: 11,fontFamily: "beIN",color: HexColor("#827C7C")),)),
       const SizedBox(height: 2,),
-      Center(child: Text(model.body2, style: TextStyle(fontSize: 11,fontFamily: "beIN",color: HexColor("#5787A6")),)),
+      Center(child: Text(model.body2, style:
+      TextStyle(fontSize: 11,fontFamily: "beIN",color: MyTheme.mainAppColor),)),
       const SizedBox(height: 10,),
     ],
   );

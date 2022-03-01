@@ -17,7 +17,7 @@ class DrawerCubit extends Cubit<DrawerState>{
 
   Future<MosafrInformationModel> getMosafrInformation () async {
     emit(GetLoadingMosaferInformationStates());
-    var Api = Uri.parse("https://msafr.we-work.pro/api/auth/masafr/get-user-info");
+    var Api = Uri.parse("https://msafr.we-work.pro/api/auth/masafr/get-masafr-info");
     Map<String, String> mapData = {
       'authToken': CacheHelper.getData(key: "token"),
     };

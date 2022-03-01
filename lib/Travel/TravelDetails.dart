@@ -104,7 +104,7 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                       color: MyTheme.mainAppBlueColor,
                       borderRadius: BorderRadius.circular(20)),
                 ),
-                Container(
+                /*Container(
                   child: Text(
                     "المسافة ٠٠٠ كيلو",
                     style: TextStyle(color: Colors.white),
@@ -114,7 +114,7 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                   decoration: BoxDecoration(
                       color: MyTheme.mainAppColor,
                       borderRadius: BorderRadius.circular(20)),
-                )
+                )*/
               ],
             ),
             padding: const EdgeInsets.all(15),

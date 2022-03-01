@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/drawer/bloc/state_drawer.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 import 'bloc/cubit_drawer.dart';
 import 'edit_your_data.dart';
@@ -29,38 +31,41 @@ class ProfilePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 30,),
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor:HexColor("#F5F4F4"),
-                        radius: 40,
-                        backgroundImage: NetworkImage(""),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          child: Icon(Icons.check,color:Colors.white,size:12,),
-                          backgroundColor: Colors.green,
-                          radius: 7,
+                  ClipOval(
+                    child: FadeInImage.assetNetwork(
+                      height: 80,
+                      width: 80,
+                      placeholderCacheHeight: 80,
+                      placeholderCacheWidth: 80,
+                      placeholder: "assets/man.png",
+                      image: CacheHelper.getData(key: "photo"),
+                      imageErrorBuilder: (context,o,c)=>ClipOval(
+                        child: Image.asset(
+                          "assets/man.png",
+                          height: 80,
+                          width: 80,
                         ),
                       ),
-                    ],
+                    ),
                   ),
+                  SizedBox(height: 10,),
                   RatingBar.builder(
-                    initialRating:double.parse(DrawerCubit.get(context).mosafrInformationModel.data.rate),
+                    ignoreGestures: true,
+                    initialRating: 4.0,
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,
-                    itemSize: 15,
+                    itemSize: 20,
                     itemBuilder: (context, _) => Icon(
                       Icons.star,
-                      color: HexColor("#9EA657"),
+                      color: MyTheme.mainAppColor,
                     ),
                   ),
                   SizedBox(height: 10,),
-                  Text(DrawerCubit.get(context).mosafrInformationModel.data.name,style: TextStyle(color: HexColor("#5787A6"),
+                  Text(DrawerCubit.get(context).
+                  mosafrInformationModel.data.name,style:
+                  TextStyle(color: HexColor("#5787A6"),
                       fontWeight: FontWeight.bold),),
                   SizedBox(height: 10,),
                   SizedBox(height: 30,),

@@ -139,7 +139,7 @@ class RequestServices {
   String negotiation;
   User user;
   Service service;
-
+  static List<RequestServices> toList(List jsonData) => jsonData.map((map) => RequestServices.fromJson(map)).toList();
   RequestServices(
       {this.id,
         this.userId,
@@ -565,4 +565,93 @@ extension ToString on MessageType {
     }
     return "TextMessage";
   }
+}
+
+class AddModel {
+  int  id;
+  String  subject;
+  String  link;
+  String  siteAfterAnnouncement;
+  String  allDays;
+  String  appearTime;
+  String  startDate;
+  String  endDate;
+  String  dailyRepeat;
+  String  active;
+  String  image;
+  String  animationType;
+  String  personTarget;
+  String  userAppear;
+  String  masafrAppear;
+  String  createdAt;
+  String  updatedAt;
+  List<String>  days;
+  List<String>  places;
+
+  AddModel(
+      {this.id,
+        this.subject,
+        this.link,
+        this.siteAfterAnnouncement,
+        this.allDays,
+        this.appearTime,
+        this.startDate,
+        this.endDate,
+        this.dailyRepeat,
+        this.active,
+        this.image,
+        this.animationType,
+        this.personTarget,
+        this.userAppear,
+        this.masafrAppear,
+        this.createdAt,
+        this.updatedAt,
+        this.days,
+        this.places});
+
+  AddModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    subject = json['subject'];
+    link = json['link'];
+    siteAfterAnnouncement = json['site_after_announcement'];
+    allDays = json['all_days'];
+    appearTime = json['appear_time'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
+    dailyRepeat = json['daily_repeat'];
+    active = json['active'];
+    image = json['image'];
+    animationType = json['animation_type'];
+    personTarget = json['person_target'];
+    userAppear = json['user_appear'];
+    masafrAppear = json['masafr_appear'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    days = json['days'].cast<String>();
+    places = json['places'].cast<String>();
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['subject'] = this.subject;
+    data['link'] = this.link;
+    data['site_after_announcement'] = this.siteAfterAnnouncement;
+    data['all_days'] = this.allDays;
+    data['appear_time'] = this.appearTime;
+    data['start_date'] = this.startDate;
+    data['end_date'] = this.endDate;
+    data['daily_repeat'] = this.dailyRepeat;
+    data['active'] = this.active;
+    data['image'] = this.image;
+    data['animation_type'] = this.animationType;
+    data['person_target'] = this.personTarget;
+    data['user_appear'] = this.userAppear;
+    data['masafr_appear'] = this.masafrAppear;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['days'] = this.days;
+    data['places'] = this.places;
+    return data;
+  }
+  static List<AddModel> toList(List jsonData) => jsonData.map((map) => AddModel.fromJson(map)).toList();
 }

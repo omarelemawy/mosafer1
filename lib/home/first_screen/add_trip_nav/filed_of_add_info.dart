@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 
 class FiledOfAddInfo extends StatelessWidget {
    TextEditingController dateController;
-   TextEditingController timeController;
-   FiledOfAddInfo(this.dateController,this.timeController);
+   TextEditingController placeController;
+   FiledOfAddInfo(this.dateController,this.placeController);
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +14,14 @@ class FiledOfAddInfo extends StatelessWidget {
           children: [
             SizedBox(width: 5,),
             Expanded(
-              child: Container(
-                height: 45,
-                child: TextFormField(
-                  controller: timeController,
-                  decoration: InputDecoration(
-                      labelText: "حدد المكان",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)
-                      )
-                  ),
+              child: TextFormField(
+                controller: placeController,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                    labelText: "حدد المكان",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)
+                    )
                 ),
               ),
             ),
@@ -31,24 +29,25 @@ class FiledOfAddInfo extends StatelessWidget {
             Image.asset("assets/Component1.png"),
             SizedBox(width: 5,),
             Expanded(
-              child: Container(
-                height: 45,
-                child: TextFormField(
-                  onTap: (){
-                    showDatePicker(context: context,
-                        initialDate: DateTime.now(),
-                        firstDate:DateTime.now() ,
-                        lastDate: DateTime.utc(2090)).then((value) {
-                      dateController.text=DateFormat.yMMMd().format(value);
-                    });
-                  },
-                  controller: dateController,
-                  decoration: InputDecoration(
-                      labelText: "حدد الوقت",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)
-                      )
-                  ),
+              child: TextFormField(
+                onTap: (){
+                  showDatePicker(context: context,
+                    initialDate: DateTime.now().add(Duration(hours: 1)),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(DateTime.now().year + 10),
+                     ).then((value) {
+                    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                    final String formatted = formatter.format(value);
+                     dateController.text=formatted;
+                  });
+                },
+                controller: dateController,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                    labelText: "حدد الوقت",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)
+                    )
                 ),
               ),
             ),
