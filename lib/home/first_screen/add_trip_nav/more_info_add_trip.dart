@@ -5,7 +5,10 @@ import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/first_screen/add_trip_nav/bloc/bloc_add_trip.dart';
 import 'package:mosafer1/home/first_screen/add_trip_nav/bloc/state_add_trip.dart';
+import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/model/get-all-main-trip-categorires.dart';
+import 'package:mosafer1/shared/Utils.dart';
+import 'package:mosafer1/shared/styles/thems.dart';
 
 import 'filed_of_add_info.dart';
 
@@ -93,6 +96,7 @@ class MoreInfoAddTrip extends StatelessWidget {
                             child: TextFormField(
                               controller: getLocationFirstDesign,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)
                                   ),
@@ -106,6 +110,7 @@ class MoreInfoAddTrip extends StatelessWidget {
                             child: TextFormField(
                               controller: getDescriptionFirstDesign,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)
                                   ),
@@ -122,7 +127,15 @@ class MoreInfoAddTrip extends StatelessWidget {
                               AddTripBloc.get(context).createTrip(DataOfTrip(
                                 fromPlace: getLocationFirstDesign.text,
                                 description: getDescriptionFirstDesign.text
-                              ),data.id,context);
+                              ),data.id,context).then((value) {
+                                if(value==true){
+                                  Utils().showMyDialog(SimpleInformDialog(
+                                    title: "أدارة مسافر",
+                                    body: "تم أضافة رحلة",
+                                    icon: Image.asset("assets/logo1.png"),
+                                  ),context);
+                                }
+                              });
                             },
                             child: Text("نشر الخدمة", style: TextStyle(
                                 color: Colors.white),),
@@ -138,6 +151,7 @@ class MoreInfoAddTrip extends StatelessWidget {
                             child: TextFormField(
                               controller: getDescriptionSecondDesign,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)
                                   ),
@@ -246,7 +260,15 @@ class MoreInfoAddTrip extends StatelessWidget {
                                     description: getDescriptionSecondDesign.text,
                                     fromPlace: getStartLocationSecondDesign.text,
                                     toPlace: getEndLocationSecondDesign.text
-                                  ),data.id,context);
+                                  ),data.id,context).then((value) {
+                                if(value==true){
+                                  Utils().showMyDialog(SimpleInformDialog(
+                                    title: "أدارة مسافر",
+                                    body: "تم أضافة رحلة",
+                                    icon: Image.asset("assets/logo1.png"),
+                                  ),context);
+                                }
+                              });;
                             },
                             child: Text("نشر الخدمة", style: TextStyle(
                                 color: Colors.white,fontWeight: FontWeight.bold),),
@@ -262,6 +284,7 @@ class MoreInfoAddTrip extends StatelessWidget {
                             child: TextFormField(
                               controller: getDescriptionThirdDesign,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)
                                   ),
@@ -347,7 +370,15 @@ class MoreInfoAddTrip extends StatelessWidget {
                                 description: getDescriptionThirdDesign.text,
                                 fromPlace: getStartLocationThirdDesign.text,
                                 toPlace: getEndLocationThirdDesign.text
-                              ),data.id,context);
+                              ),data.id,context).then((value) {
+                                if(value==true){
+                                  Utils().showMyDialog(SimpleInformDialog(
+                                    title: "أدارة مسافر",
+                                    body: "تم أضافة رحلة",
+                                    icon: Image.asset("assets/logo1.png"),
+                                  ),context);
+                                }
+                              });;
                             },
                             child: Text("نشر الخدمة",
                               style: TextStyle(color: Colors.white),),
@@ -362,6 +393,7 @@ class MoreInfoAddTrip extends StatelessWidget {
                             child: TextFormField(
                               controller: getDescriptionFourthDesign,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)
                                   ),
@@ -456,7 +488,15 @@ class MoreInfoAddTrip extends StatelessWidget {
                                 toPlace: getEndLocationFourthDesign.text,
                                 startDate: getStartTimerFourthDesign.text,
                                 endDate: getEndTimerFourthDesign.text
-                              ),data.id,context);
+                              ),data.id,context).then((value) {
+                                if(value==true){
+                                  Utils().showMyDialog(SimpleInformDialog(
+                                    title: "أدارة مسافر",
+                                    body: "تم أضافة رحلة",
+                                    icon: Image.asset("assets/logo1.png"),
+                                  ),context);
+                                }
+                              });
                             },
                             child: Text("نشر الخدمة",
                               style: TextStyle(color: Colors.white),),
@@ -504,23 +544,78 @@ class MoreInfoAddTrip extends StatelessWidget {
   }
 
   Widget getLocationDesign(TextEditingController editingController) {
-    return Container(
-      height: 40,
-      margin: EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: TextFormField(
-          controller: editingController,
-          decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20)
-              ),
-              labelText: "المدينه"
-          ),
-          maxLines: 1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: TextFormField(
+        controller: editingController,
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20)
+            ),
+            labelText: "المدينه"
         ),
+        maxLines: 1,
       ),
     );
+  }
+}
+
+class SimpleInformDialog extends StatelessWidget {
+  final Widget icon;
+  final String title;
+  final String body;
+  const SimpleInformDialog({Key key, this.icon, this.title, this.body}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              width: size.width,
+              margin: const EdgeInsets.only(left: 40,right: 40,top: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ElevatedButton(onPressed: (){
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()),
+                            (route) => false);
+                  }, child: Icon(Icons.close,color: MyTheme.mainAppColor,),style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all( Colors.white),
+                    shape: MaterialStateProperty.all(CircleBorder()),
+                  ),),
+                  Padding(
+                    child:   Align(
+                      child: Text(body,style: TextStyle(color: Colors.white),),
+                      alignment: Alignment.center,
+                    ),
+                    padding: const EdgeInsets.only(bottom: 30,top: 20),
+                  )
+                ],
+              ),
+              padding: const EdgeInsets.only(top: 10,left: 20,right: 20,bottom: 20),
+              decoration: BoxDecoration(
+                  color: MyTheme.mainAppColor,
+                  borderRadius: BorderRadius.circular(15)
+              ),
+            ),
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15)
+              ),
+              child: icon,
+            )
+          ],
+        ),
+      ),);
   }
 }
 

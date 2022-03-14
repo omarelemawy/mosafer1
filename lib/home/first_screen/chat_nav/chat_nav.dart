@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/drawer/drawer.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/ChatItem.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/MessengerPage/ChatMessengerScreen.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
+import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 
 class ChatNav extends StatefulWidget {
@@ -19,7 +23,7 @@ class _ChatNavState extends State<ChatNav> {
   @override
   void initState() {
     chatBloc = BlocProvider.of<ChatBloc>(context);
-    chatBloc.getChatRooms(1);
+    chatBloc.getChatRooms(CacheHelper.getData(key: "id"));
     super.initState();
   }
   @override
@@ -27,10 +31,41 @@ class _ChatNavState extends State<ChatNav> {
     final ThemeData appTheme = Theme.of(context);
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
+      child: CacheHelper.getData(key: "token")==null?
+      Scaffold(
+
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Go To Sing In First",style: TextStyle(color: HexColor("#A2B594"),
+                  fontSize: 15,fontWeight: FontWeight.bold),),
+              SizedBox(height: 30,),
+              MaterialButton(
+                color: HexColor("#A2B594"),
+                onPressed: (){
+                  /* pushNewScreen(
+                        context,
+                        screen: LoginScreen(),
+                        withNavBar: false, // OPTIONAL VALUE. True by default.
+                        pageTransitionAnimation: PageTransitionAnimation.scale,
+                      );*/
+                  Navigator.pushAndRemoveUntil(widget.context1, MaterialPageRoute(builder: (context1)=>LoginScreen())
+                      , (route) => false);
+                },
+                child: Text("Go",style: TextStyle(color: Colors.white
+                ),),
+              )
+            ],
+          ),
+        ),
+      ):Scaffold(
         body: Center(
           child: FutureBuilder<List<ChatRoom>>(
-            future: chatBloc.getChatRooms(1),
+            future: chatBloc.getChatRooms(CacheHelper.getData(key: "id")),
             builder: (context,snap){
               print("Snap : ${snap}");
               if(snap.hasData) {
@@ -38,7 +73,12 @@ class _ChatNavState extends State<ChatNav> {
                 return ListView.separated(
                   itemCount: snap.data.length,
                   itemBuilder: (context1,index) => ChatListItem(chatRoom: snap.data[index],onItemClick: () {
-                    Navigator.push(context1, MaterialPageRoute(builder: (context1)=> ChatMessengerScreen()));
+                    pushNewScreen(
+                      context,
+                      screen: ChatMessengerScreen(chatRoomId: snap.data[index].id,),
+                      withNavBar: false, // OPTIONAL VALUE. True by default.
+                      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                    );
                   },),
                   separatorBuilder: (context,index) => Divider(endIndent: 10,indent: 10,color: Colors.grey,),
                 );

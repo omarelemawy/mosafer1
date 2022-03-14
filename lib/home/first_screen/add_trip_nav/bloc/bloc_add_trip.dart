@@ -39,7 +39,7 @@ class AddTripBloc extends Cubit<AddTripStates>{
 
   }
 
-  Future createTrip (DataOfTrip dataOfTrip,typeOfTrips,context) async {
+  Future<bool> createTrip (DataOfTrip dataOfTrip,typeOfTrips,context) async {
     emit(CreateTripLoadingStates());
     Map mapData1 = {
       "type_of_trip": typeOfTrips,
@@ -67,11 +67,12 @@ class AddTripBloc extends Cubit<AddTripStates>{
     final response = await http.post(Api,headers: mapData,body:mapData1);*/
     if (response.statusCode == 200) {
       emit(CreateTripSuccessStates());
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()), (route) => false);
+      return true;
       print(response.data);
     } else {
       emit(CreateTripErrorStates('msg'));
       print(response.data);
+      return false;
     }
 
   }

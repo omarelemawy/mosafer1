@@ -5,22 +5,29 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mosafer1/Fatorah/FatorahPage.dart';
+import 'package:mosafer1/Travel/TravelDetails.dart';
 import 'package:mosafer1/home/BottomNavigation/bloc/bloc_chat.dart';
 import 'package:mosafer1/home/drawer/drawer.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/MapPage/MapView.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/MessengerPage/MessageItem.dart';
+import 'package:mosafer1/home/first_screen/chat_nav/MessengerPage/request_service_from_chat.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/bloc_chat.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/bloc/state_chat.dart';
+import 'package:mosafer1/home/first_screen/my_trips/my_trips_nav.dart';
+import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/shared/Utils.dart';
 import 'package:mosafer1/shared/Widgets/CustomExpandedFAB.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
 import 'package:mosafer1/shared/netWork/Firebase/Chat.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 
 class ChatMessengerScreen extends StatefulWidget {
-  ChatMessengerScreen({Key key}) : super(key: key);
+  final chatRoomId;
+  ChatMessengerScreen({Key key,this.chatRoomId}) : super(key: key);
 
   @override
   _ChatMessengerScreenState createState() => _ChatMessengerScreenState();
@@ -42,7 +49,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
       bottomNavigationBloc = BlocProvider.of<BottomNavigationBloc>(context);
 
       chatBloc = BlocProvider.of<ChatBloc>(context);
-      chatBloc.getMessages("cjujAnyhD9PCtUP4f2OH");
+      chatBloc.getMessages(widget.chatRoomId);
 
     });
     super.initState();
@@ -63,17 +70,10 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
+                (context)=>HomeScreen()), (route) => false);
           },
         ),
-        actions: [
-          TextButton(
-            child: SVGIcons.barIcon,
-            onPressed: () {
-
-            },
-          ),
-        ],
         title: Text(
           "محادثة",
           style: TextStyle(fontFamily: "beIN"),
@@ -90,11 +90,13 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          chatBloc.createComplaint(chat_id: widget.chatRoomId,context: context,);
+                        },
                         child: Text("بلاغ"),
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(MyTheme.mainAppColor),
+                            MaterialStateProperty.all(MyTheme.mainAppColor),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)))),
@@ -131,20 +133,30 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (state is LoadedChatStates || state is NewMessage || state is NewImageState) {
+              }
+              else if (state is LoadedChatStates || state is NewMessage || state is NewImageState)
+              {
                 moveChat();
-                return ListView.builder(
+                return chatBloc==null?CircularProgressIndicator():
+                ListView.builder(
                   controller: _scrollController,
                   padding:
-                      const EdgeInsets.only(bottom: 100, left: 10, right: 10),
+                  const EdgeInsets.only(bottom: 100, left: 10, right: 10),
                   itemCount: chatBloc.messages.length,
                   itemBuilder: (context, index) => MessageItem(
                     appTheme: appTheme,
                     message: chatBloc.messages[index],
                     isCurrentUser: true,
+                    onEnterButtonPress: () {
+                      print(chatBloc.messages[index].additionalData["id"]);
+                      print(widget.chatRoomId);
+                      Utils().showMyDialog(SimpleIconDialogChat(id:chatBloc.messages[index].additionalData["id"],
+                        chatRoomsid: widget.chatRoomId,),context);
+                    },
                   ),
                 );
-              } else if(state is NoMessageChatStates) {
+              } else if(state is NoMessageChatStates)
+              {
                 return Center(child : Text("ابدا المحادثة"));
               }
               return SizedBox();
@@ -196,206 +208,215 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                   children: [
                     _isActive
                         ? SlidingUpPanel(
-                            color: Colors.transparent,
-                            maxHeight: 180,
-                            minHeight: 0,
-                            boxShadow: [],
-                            controller: _panelController,
-                            header: Stack(
-                              alignment: AlignmentDirectional.bottomStart,
+                      color: Colors.transparent,
+                      maxHeight: 180,
+                      minHeight: 0,
+                      boxShadow: [],
+                      controller: _panelController,
+                      header: Stack(
+                        alignment: AlignmentDirectional.bottomStart,
+                        children: [
+                          Container(
+                            height: 150,
+                            margin: const EdgeInsets.only(top: 50),
+                            padding: const EdgeInsets.only(
+                                top: 35, left: 9, right: 9),
+                            width: size.width,
+                            decoration: BoxDecoration(
+                                color: MyTheme.mainAppBlueColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20))),
+                            child: Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  height: 150,
-                                  margin: const EdgeInsets.only(top: 50),
-                                  padding: const EdgeInsets.only(
-                                      top: 35, left: 9, right: 9),
-                                  width: size.width,
-                                  decoration: BoxDecoration(
-                                      color: MyTheme.mainAppColor,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(20),
-                                          topRight: Radius.circular(20))),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Padding(
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text(
-                                            "شكوي",
-                                            style: appTheme.textTheme.bodyText2,
-                                          ),
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.white),
-                                              minimumSize:
-                                                  MaterialStateProperty.all(
-                                                      Size.fromHeight(50)),
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)))),
+                                Expanded(
+                                    child: Padding(
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          "شكوي",
+                                          style: appTheme.textTheme.bodyText2,
                                         ),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                      )),
-                                      Expanded(
-                                          child: Padding(
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text(
-                                            "شكوي",
-                                            style: appTheme.textTheme.bodyText2,
-                                          ),
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.white),
-                                              minimumSize:
-                                                  MaterialStateProperty.all(
-                                                      Size.fromHeight(50)),
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)))),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                      )),
-                                      Expanded(
-                                          child: Padding(
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text(
-                                            "شكوي",
-                                            style: appTheme.textTheme.bodyText2,
-                                          ),
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.white),
-                                              minimumSize:
-                                                  MaterialStateProperty.all(
-                                                      Size.fromHeight(50)),
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)))),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                      )),
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                    child: TextButton(
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      onPressed: () {
-                                        _panelController.close();
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor:
+                                        style: ButtonStyle(
+                                            backgroundColor:
                                             MaterialStateProperty.all(
-                                                MyTheme.mainAppColor),
-                                        shape: MaterialStateProperty.all(
-                                            CircleBorder()),
+                                                Colors.white),
+                                            minimumSize:
+                                            MaterialStateProperty.all(
+                                                Size.fromHeight(50)),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        10)))),
                                       ),
-                                    ),
-                                    bottom: 130)
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                    )),
+                                Expanded(
+                                    child: Padding(
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          "شكوي",
+                                          style: appTheme.textTheme.bodyText2,
+                                        ),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.white),
+                                            minimumSize:
+                                            MaterialStateProperty.all(
+                                                Size.fromHeight(50)),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        10)))),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                    )),
+                                Expanded(
+                                    child: Padding(
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          "شكوي",
+                                          style: appTheme.textTheme.bodyText2,
+                                        ),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.white),
+                                            minimumSize:
+                                            MaterialStateProperty.all(
+                                                Size.fromHeight(50)),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        10)))),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                    )),
                               ],
                             ),
-                            panel: SizedBox(),
-                          )
-                        : Padding(
-                          padding: const EdgeInsets.only(left: 80,right: 25),
-                          child: SizedBox(
-                            width: size.width*0.8,
-                            child: SlidingUpPanel(
-                              color: Colors.transparent,
-                              maxHeight: 80,
-                              minHeight: 0,
-                              boxShadow: [],
-                              controller: _panelController,
-                              header: Stack(
-                                alignment: AlignmentDirectional.bottomStart,
-                                children: [
-                                  Container(
-                                    height: 60,
-                                    width: size.width*0.75,
-                                    padding: const EdgeInsets.all(13),
-                                    decoration: BoxDecoration(
-                                        color: MyTheme.mainAppColor,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20),
-                                            topRight: Radius.circular(20))),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Padding(
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  bool fatorahSent = await Navigator.push(context, MaterialPageRoute(builder: (context) => FatorahPage()));
-                                                  if(fatorahSent){
-                                                    Message msg = Message(
-                                                        user: User.forChat(
-                                                          1,
-                                                          "Muhammed Shawky",
-                                                          'https://www.hotfootdesign.co.uk/wp-content/uploads/2016/05/d5jA8OZv.jpg',
-                                                          "idPhoto",
-                                                          "email",
-                                                        ),
-                                                        message: "تم ارسال فاتورة",
-                                                        messageImage: "",
-                                                        messageType: MessageType.Reset,
-                                                        time: Timestamp.now().toString(),
-                                                        seen: false,
-                                                        isCurrentUser: true);
-                                                    await _chatData.sendMessage(chatRoomId: 'cjujAnyhD9PCtUP4f2OH',message: msg);
-                                                  }
-                                                },
-                                                child: Text(
-                                                  "انشا فاتورة",
-                                                  style: appTheme.textTheme.bodyText2,
-                                                ),
-                                                style: ButtonStyle(
-                                                    backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.white),
-                                                    fixedSize: MaterialStateProperty.all(Size.fromWidth(size.width*0.8)),
-                                                    minimumSize:
-                                                    MaterialStateProperty.all(
-                                                        Size.fromHeight(50)),
-                                                    shape: MaterialStateProperty.all(
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                            BorderRadius.circular(
-                                                                10)))),
-                                              ),
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 5),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              panel: SizedBox(),
-                            ),
                           ),
+                          Positioned(
+                              child: TextButton(
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  _panelController.close();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                  MaterialStateProperty.all(
+                                      MyTheme.mainAppColor),
+                                  shape: MaterialStateProperty.all(
+                                      CircleBorder()),
+                                ),
+                              ),
+                              bottom: 130)
+                        ],
+                      ),
+                      panel: SizedBox(),
+                    )
+                        : Padding(
+                      padding: const EdgeInsets.only(left: 80,right: 25),
+                      child: SizedBox(
+                        width: size.width*0.7,
+                        child: SlidingUpPanel(
+                          color: Colors.transparent,
+                          maxHeight: 80,
+                          minHeight: 0,
+                          boxShadow: [],
+                          controller: _panelController,
+                          header: Stack(
+                            alignment: AlignmentDirectional.bottomStart,
+                            children: [
+                              Container(
+                                height: 60,
+                                width: size.width*0.7,
+                                padding: const EdgeInsets.all(13),
+                                decoration: BoxDecoration(
+                                    color: MyTheme.mainAppColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20))),
+                                child: Row(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              FatorahService request = await Navigator.push(context,
+                                                  MaterialPageRoute(builder: (context) => FatorahPage(widget.chatRoomId)));
+                                              if(request != null){
+                                                print("Request : ${request}");
+                                                if(request.subject.isNotEmpty){
+                                                  Message msg = Message(
+                                                      user: User.forChat(
+                                                        CacheHelper.getData(key: "id"),
+                                                        CacheHelper.getData(key: "name"),
+                                                        CacheHelper.getData(key: "photo"),
+                                                        "idPhoto",
+                                                        "email",
+                                                      ),
+                                                      message: request.subject,
+                                                      messageImage: "",
+                                                      additionalData: {
+                                                        "code" : "",
+                                                        "id" : request.fatoorahId,
+                                                        "message" : ""
+                                                      },
+                                                      messageType: MessageType.Reset,
+                                                      time: Timestamp.now().toString(),
+                                                      seen: false,
+                                                      isCurrentUser: true);
+                                                  await _chatData.sendMessage(chatRoomId: widget.chatRoomId,message: msg);
+                                                }
+                                              }
+                                            },
+                                            child: Text(
+                                              "أنشاء فتوره",
+                                              style: appTheme.textTheme.bodyText2,
+                                            ),
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.white),
+                                                fixedSize: MaterialStateProperty.all(Size.fromWidth(size.width*0.8)),
+                                                minimumSize:
+                                                MaterialStateProperty.all(
+                                                    Size.fromHeight(50)),
+                                                shape: MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)))),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          panel: SizedBox(),
                         ),
+                      ),
+                    ),
                     /*!_isActive ? Container(
                       margin: const EdgeInsets.only(left: 80,right: 25),
                       padding: const EdgeInsets.only(left: 15,right: 15,top: 10,bottom: 40),
@@ -416,7 +437,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                       alignment: AlignmentDirectional.centerStart,
                       width: size.width,
                       height: size.height * 0.1,
-                      color: MyTheme.mainAppColorBright,
+                      color: MyTheme.mainAppColor,
                     ),
                   ],
                 ),
@@ -451,9 +472,9 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                   print("selected location $location");
                                   Message msg = Message(
                                       user: User.forChat(
-                                        1,
-                                        "Muhammed Shawky",
-                                        'https://www.hotfootdesign.co.uk/wp-content/uploads/2016/05/d5jA8OZv.jpg',
+                                        CacheHelper.getData(key: "id"),
+                                        CacheHelper.getData(key: "name"),
+                                        CacheHelper.getData(key: "photo"),
                                         "idPhoto",
                                         "email",
                                       ),
@@ -463,7 +484,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                       time: Timestamp.now().toString(),
                                       seen: false,
                                       isCurrentUser: true);
-                                  await _chatData.sendMessage(chatRoomId: 'cjujAnyhD9PCtUP4f2OH',message: msg);
+                                  await _chatData.sendMessage(chatRoomId: widget.chatRoomId,message: msg);
                                   moveChat();
                                   break;
                                 }
@@ -548,9 +569,9 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                     if(_messageSendController.text.isNotEmpty || chatBloc.imagePath.isNotEmpty){
                                       Message msg = Message(
                                           user: User.forChat(
-                                            1,
-                                            "Muhammed Shawky",
-                                            'https://www.hotfootdesign.co.uk/wp-content/uploads/2016/05/d5jA8OZv.jpg',
+                                            CacheHelper.getData(key: "id"),
+                                            CacheHelper.getData(key: "name"),
+                                            CacheHelper.getData(key: "photo"),
                                             "idPhoto",
                                             "email",
                                           ),
@@ -561,13 +582,13 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                           isCurrentUser: true);
                                       //chatBloc.sendMessage(msg, _scrollController);
                                       _messageSendController.clear();
-                                      await _chatData.sendMessage(chatRoomId: "cjujAnyhD9PCtUP4f2OH" , message: msg);
+                                      await _chatData.sendMessage(chatRoomId: widget.chatRoomId , message: msg);
                                       moveChat();
                                     }
                                   },
                                   icon: Icon(
                                     Icons.send,
-                                    color: MyTheme.mainAppColor,
+                                    color: MyTheme.mainAppBlueColor,
                                     size: 20,
                                   ),
                                 ),
@@ -602,5 +623,27 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
     _scrollController.dispose();
     _messageSendController.dispose();
     super.dispose();
+  }
+}
+class SimpleIconDialogChat extends StatelessWidget {
+  final int id;
+  final int chatRoomsid;
+  const SimpleIconDialogChat({Key key,this.id,this.chatRoomsid}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return BlocProvider(
+        create: (context)=>ChatBloc()..getChatServices(context,id,chatRoomsid),
+        child: BlocConsumer<ChatBloc,ChatStates>(
+          builder: (context,state){
+            return Material(
+              color: Colors.transparent,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),);
+          },
+          listener: (context,state){},
+        )
+    );
   }
 }

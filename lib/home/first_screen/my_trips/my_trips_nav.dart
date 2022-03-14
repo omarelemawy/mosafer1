@@ -12,7 +12,8 @@ import 'more_infor_my_trips.dart';
 
 class MyTripsNav extends StatelessWidget {
   BuildContext context1;
-   MyTripsNav(this.context1);
+  final bool isFromMain;
+  MyTripsNav(this.context1, {this.isFromMain = true});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mosafer1/Fatorah/AddServiceWidget.dart';
@@ -14,7 +15,8 @@ import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 class FatorahCubit extends Cubit<FatorahState>{
   FatorahCubit() : super(InitialFatorahState());
   static FatorahCubit get(context) => BlocProvider.of(context);
-
+  String serviceName = "";
+  String servicePrice = "";
   HttpOps _httpOps = HttpOps();
   List<AddService> addServicesList = [AddService()];
   Map<String,dynamic> totalServicesMap = {"0" : {"price" : "0", "serviceName" : ""}};
@@ -26,8 +28,10 @@ class FatorahCubit extends Cubit<FatorahState>{
     emit(MoreServicesFatorahState());
   }
 
-  void addServiceData(int index,String serviceName ,String price) {
-    totalServicesMap.update("$index", (value) => {
+  void addService(int index,String serviceName ,String price)
+  {
+    totalServicesMap.update("$index",
+            (value) => {
       "price" : price,
       "serviceName" : serviceName
     },
@@ -37,6 +41,7 @@ class FatorahCubit extends Cubit<FatorahState>{
     );
     print("Total : $totalServicesMap");
   }
+
 
   void calculateTotalServicesPrice(){
     totalPrice = 0;
@@ -51,21 +56,28 @@ class FatorahCubit extends Cubit<FatorahState>{
     return totalServicesMap["0"]["price"] != "0" && totalServicesMap["0"]["serviceName"] != "";
   }
 
-  void createNewFatorah({int chatId })  async {
+  Future<FatorahService> createNewFatorah({int chatId })  async {
     List<Map> fatoorahServices = [];
+    var dio = Dio();
+    Response response;
     totalServicesMap.forEach((key, value) {
-      fatoorahServices.add({"subject":value["serviceName"].toString(), "value":int.parse(value["price"])});
+      fatoorahServices.add({"subject":value["serviceName"], "value":int.parse(value["price"])});
     });
-
     Map data = {
-      "chat_id": 1 ,
+      "chat_ids": chatId ,
       "fatoorahs" : fatoorahServices
     };
+    Map<String, String> mapData = {
+      'authToken': CacheHelper.getData(key: "token"),
+    };
+    response = await dio.post("https://msafr.we-work.pro/api/auth/masafr/create-fatoorah",
+        data: data,options: Options(headers:mapData ));
+
 
     print("Data $data");
 
-    GetAllRequestServicesModel requestServicesModel = await _httpOps.postData(mapData: data,endPoint: addNewFatorahUrl ,auth: true);
-    print(requestServicesModel.data);
+    print(response.data["data"]);
+    return FatorahService.fromJson(response.data["data"]);
 
   }
 }

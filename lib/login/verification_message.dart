@@ -82,7 +82,7 @@ class VerificationMessage extends StatelessWidget {
                                       Text( "تم ارسال الكود الي الرقم التالي",style: TextStyle(color:
                                       HexColor("#649A3A"),
                                           fontSize: 14,fontWeight: FontWeight.bold)),
-                                      Text( "Set Verification Code",style: TextStyle(color: Colors.deepOrangeAccent,
+                                      Text( "ضع رقم التأكيد",style: TextStyle(color: Colors.deepOrangeAccent,
                                           fontSize: 20,)),
                                       SizedBox(height: 30,),
                                       Container(
@@ -123,7 +123,7 @@ class VerificationMessage extends StatelessWidget {
                                         ),
                                         child: MaterialButton(onPressed: (){
                                           LoginBloc.get(context).sendCode(email, context, numController.text);
-                                        },child: Text( "Send",style: TextStyle(color: Colors.white,fontSize: 16),),),
+                                        },child: Text( "أرسال",style: TextStyle(color: Colors.white,fontSize: 16),),),
                                       )
                                     ],
                                   ),

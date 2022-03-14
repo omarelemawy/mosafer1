@@ -13,3 +13,9 @@ class GetErrorDeleteTripStates extends MyTripsStates{
   String error;
   GetErrorDeleteTripStates(this.error);
 }
+class GetLoadingCreateNegotiationRequestStates extends MyTripsStates{}
+class GetSuccessCreateNegotiationRequestStates extends MyTripsStates{}
+class GetErrorCreateNegotiationRequestStates extends MyTripsStates{
+  String error;
+  GetErrorCreateNegotiationRequestStates(this.error);
+}

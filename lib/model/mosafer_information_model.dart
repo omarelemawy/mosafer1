@@ -101,7 +101,7 @@ class Data {
     id = json['id'];
     name = json['name'];
     photo = json['photo'];
-    rate = json['rate'];
+    rate = json['rate'] == "0" ? "1" : json['rate'];
     idPhoto = json['id_photo'];
     gender = json['gender'];
     email = json['email'];

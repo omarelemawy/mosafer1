@@ -6,8 +6,7 @@ import 'package:mosafer1/shared/styles/thems.dart';
 import 'bloc/cubit.dart';
 typedef StringCallBack = Function(String);
 class AddService extends StatelessWidget {
-   String serviceName = "";
-   String servicePrice = "";
+
    final int index;
    AddService({Key key, this.index}) : super(key: key);
 
@@ -24,8 +23,8 @@ class AddService extends StatelessWidget {
             padding: const EdgeInsets.all(5),
             child: TextField(
               onChanged: (val){
-                serviceName = val;
-                fatorahCubit.addServiceData(index,serviceName,servicePrice);
+                fatorahCubit.serviceName = val;
+                fatorahCubit.addService(index,fatorahCubit.serviceName,fatorahCubit.servicePrice);
               },
               decoration: InputDecoration.collapsed(
                 hintText: "حدد الخدمة",
@@ -49,8 +48,8 @@ class AddService extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     onChanged: (val){
-                      servicePrice = val;
-                      fatorahCubit.addServiceData(index,serviceName,servicePrice);
+                      fatorahCubit. servicePrice = val;
+                      fatorahCubit.addService(index,fatorahCubit.serviceName,fatorahCubit.servicePrice);
                     },
                     onSubmitted: (val){
                       fatorahCubit.calculateTotalServicesPrice();

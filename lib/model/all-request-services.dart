@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-import 'package:mosafer1/shared/Utils.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class GetAllRequestServicesModel {
@@ -438,8 +437,8 @@ class Message {
   bool isCurrentUser;
   String time;
   bool seen;
-
-  Message({this.message, this.messageImage,this.messageType,this.user, this.isCurrentUser,this.time,this.seen,this.messageLocation});
+  Map additionalData;
+  Message({this.message, this.messageImage,this.messageType,this.user, this.isCurrentUser,this.time,this.seen,this.messageLocation,this.additionalData});
 
   factory Message.fromMap(QueryDocumentSnapshot map) {
     return Message(
@@ -449,7 +448,8 @@ class Message {
         messageLocation: map['messageLocation'] != null ? map['messageLocation']  : null,
         messageImage: map["messageImage"],
         messageType: _getMessageType(map["messageType "]),
-        isCurrentUser: true,
+        isCurrentUser: map["userInfo"]["userId"] == CacheHelper.getData(key: "id"),
+        additionalData: map["additionalData"] != null ? map["additionalData"] : null,
         user: User.forChat(
             map["userInfo"]["userId"],
             map["userInfo"]["userName"],
@@ -473,7 +473,8 @@ class Message {
         "userName" : user.name,
         "image" : user.photo,
         "userId" : user.id,
-      }
+      },
+      "additionalData" : additionalData
     };
   }
 
@@ -524,25 +525,95 @@ class ChatRoom {
   Message lastMessage;
   User mosafer;
   User client;
+  RequestServiceChatRoom requestServiceChatRoom;
 
-  ChatRoom({this.id, this.lastMessage,this.mosafer,this.client,});
+  ChatRoom({this.id, this.lastMessage,this.mosafer,this.client,this.requestServiceChatRoom});
 
   factory ChatRoom.fromMap(Map map) {
     return ChatRoom(
       id: map["id"],
       lastMessage: Message(message: "",user: User.forChat(1, "name", "photo", "idPhoto", "email")),
       client: User.fromJson(map["user"]),
+        requestServiceChatRoom : map['request_service'] != null
+            ? new RequestServiceChatRoom.fromJson(map['request_service'])
+            : null
     );
   }
 
   static List<ChatRoom> toList(List data) => data.map((chatRoomMap) => ChatRoom.fromMap(chatRoomMap)).toList();
 }
 
-class FatorahService {
-  String serviceName;
-  String servicePrice;
-  FatorahService(this.serviceName, this.servicePrice);
+class RequestServiceChatRoom {
+  int id;
+  String typeOfTrips;
+  ServiceChatRoom service;
+
+  RequestServiceChatRoom({this.id, this.typeOfTrips, this.service});
+
+  RequestServiceChatRoom.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    typeOfTrips = json['type_of_trips'];
+    service =
+    json['service'] != null ? new ServiceChatRoom.fromJson(json['service']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type_of_trips'] = this.typeOfTrips;
+    if (this.service != null) {
+      data['service'] = this.service.toJson();
+    }
+    return data;
+  }
 }
+
+class ServiceChatRoom {
+  int id;
+  String categorieName;
+
+  ServiceChatRoom({this.id, this.categorieName});
+
+  ServiceChatRoom.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    categorieName = json['categorie_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['categorie_name'] = this.categorieName;
+    return data;
+  }
+}
+
+class FatorahService {
+  int  code;
+  int  privateMsg;
+  String  subject;
+  int  fatoorahId;
+
+  FatorahService({this.code, this.privateMsg, this.subject, this.fatoorahId});
+
+  FatorahService.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    privateMsg = json['private_msg'];
+    subject = json['subject'];
+    fatoorahId = json['fatoorah_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['code'] = this.code;
+    data['private_msg'] = this.privateMsg;
+    data['subject'] = this.subject;
+    data['fatoorah_id'] = this.fatoorahId;
+    return data;
+  }
+}
+
+
+
 
 enum MessageType {
   TextMessage,
@@ -551,6 +622,9 @@ enum MessageType {
   MapMessage,
   Complaint,
   Reset,
+  Response,
+  Request,
+  reject
 }
 
 extension ToString on MessageType {
@@ -562,6 +636,9 @@ extension ToString on MessageType {
       case MessageType.TextImageMessage: return 'TextImageMessage';
       case MessageType.MapMessage: return 'MapMessage';
       case MessageType.Complaint: return 'Complaint';
+      case MessageType.Request: return 'Request';
+      case MessageType.Response: return 'Response';
+      case MessageType.reject: return 'reject';
     }
     return "TextMessage";
   }
@@ -654,4 +731,314 @@ class AddModel {
     return data;
   }
   static List<AddModel> toList(List jsonData) => jsonData.map((map) => AddModel.fromJson(map)).toList();
+}
+
+class FreeServiceModel {
+  int    id;
+  String    masafrId;
+  String    type;
+  String    photo;
+  String    description;
+  String  active;
+  String   createdAt;
+  String  updatedAt;
+  Masafr   masafr;
+  List<Ways> ways;
+
+  FreeServiceModel(
+      {this.id,
+        this.masafrId,
+        this.type,
+        this.photo,
+        this.description,
+        this.active,
+        this.createdAt,
+        this.updatedAt,
+        this.masafr,
+        this.ways});
+
+  FreeServiceModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    masafrId = json['masafr_id'];
+    type = json['type'];
+    photo = json['photo'];
+    description = json['description'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    masafr =
+    json['masafr'] != null ? new Masafr.fromJson(json['masafr']) : null;
+    if (json['ways'] != null) {
+      ways = <Ways>[];
+      json['ways'].forEach((v) {
+        ways.add(new Ways.fromJson(v));
+      });
+    }
+  }
+  static List<FreeServiceModel> toList(List jsonData) => jsonData.map((map) => FreeServiceModel.fromJson(map)).toList();
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['masafr_id'] = this.masafrId;
+    data['type'] = this.type;
+    data['photo'] = this.photo;
+    data['description'] = this.description;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    if (this.masafr != null) {
+      data['masafr'] = this.masafr.toJson();
+    }
+    if (this.ways != null) {
+      data['ways'] = this.ways.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Masafr {
+  int    id;
+  String    name;
+  String    photo;
+  String    rate;
+  String    idPhoto;
+  String    gender;
+  String    email;
+  String    countryCode;
+  String    phone;
+  String    verificationCode;
+  String    activeTry;
+  String    emailVerifiedAt;
+  String    isVerified;
+  String    lastTryVerify;
+  String    lastSendVerifyCode;
+  String    nationalIdNumber;
+  String    nationality;
+  String    carName;
+  String    carModel;
+  String    carNumber;
+  String    carImageEast;
+  String    carImageWest;
+  String    carImageNorth;
+  String    drivingLicensePhoto;
+  Null    rememberToken;
+  String    smsNotifications;
+  String    emailNotifications;
+  String    balance;
+  String    trust;
+  String    createdAt;
+  String    updatedAt;
+
+  Masafr(
+      {this.id,
+        this.name,
+        this.photo,
+        this.rate,
+        this.idPhoto,
+        this.gender,
+        this.email,
+        this.countryCode,
+        this.phone,
+        this.verificationCode,
+        this.activeTry,
+        this.emailVerifiedAt,
+        this.isVerified,
+        this.lastTryVerify,
+        this.lastSendVerifyCode,
+        this.nationalIdNumber,
+        this.nationality,
+        this.carName,
+        this.carModel,
+        this.carNumber,
+        this.carImageEast,
+        this.carImageWest,
+        this.carImageNorth,
+        this.drivingLicensePhoto,
+        this.rememberToken,
+        this.smsNotifications,
+        this.emailNotifications,
+        this.balance,
+        this.trust,
+        this.createdAt,
+        this.updatedAt});
+
+  Masafr.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    photo = json['photo'];
+    rate = json['rate'];
+    idPhoto = json['id_photo'];
+    gender = json['gender'];
+    email = json['email'];
+    countryCode = json['country_code'];
+    phone = json['phone'];
+    verificationCode = json['verification_code'];
+    activeTry = json['active_try'];
+    emailVerifiedAt = json['email_verified_at'];
+    isVerified = json['is_verified'];
+    lastTryVerify = json['last_try_verify'];
+    lastSendVerifyCode = json['last_send_verify_code'];
+    nationalIdNumber = json['national_id_number'];
+    nationality = json['nationality'];
+    carName = json['car_name'];
+    carModel = json['car_model'];
+    carNumber = json['car_number'];
+    carImageEast = json['car_image_east'];
+    carImageWest = json['car_image_west'];
+    carImageNorth = json['car_image_north'];
+    drivingLicensePhoto = json['driving_license_photo'];
+    rememberToken = json['remember_token'];
+    smsNotifications = json['sms_notifications'];
+    emailNotifications = json['email_notifications'];
+    balance = json['balance'];
+    trust = json['trust'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['photo'] = this.photo;
+    data['rate'] = this.rate;
+    data['id_photo'] = this.idPhoto;
+    data['gender'] = this.gender;
+    data['email'] = this.email;
+    data['country_code'] = this.countryCode;
+    data['phone'] = this.phone;
+    data['verification_code'] = this.verificationCode;
+    data['active_try'] = this.activeTry;
+    data['email_verified_at'] = this.emailVerifiedAt;
+    data['is_verified'] = this.isVerified;
+    data['last_try_verify'] = this.lastTryVerify;
+    data['last_send_verify_code'] = this.lastSendVerifyCode;
+    data['national_id_number'] = this.nationalIdNumber;
+    data['nationality'] = this.nationality;
+    data['car_name'] = this.carName;
+    data['car_model'] = this.carModel;
+    data['car_number'] = this.carNumber;
+    data['car_image_east'] = this.carImageEast;
+    data['car_image_west'] = this.carImageWest;
+    data['car_image_north'] = this.carImageNorth;
+    data['driving_license_photo'] = this.drivingLicensePhoto;
+    data['remember_token'] = this.rememberToken;
+    data['sms_notifications'] = this.smsNotifications;
+    data['email_notifications'] = this.emailNotifications;
+    data['balance'] = this.balance;
+    data['trust'] = this.trust;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Ways {
+  int    id;
+  String    freeServiceId;
+  String    place;
+  String    createdAt;
+  String    updatedAt;
+
+  Ways(
+      {this.id,
+        this.freeServiceId,
+        this.place,
+        this.createdAt,
+        this.updatedAt});
+
+  Ways.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    freeServiceId = json['free_service_id'];
+    place = json['place'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['free_service_id'] = this.freeServiceId;
+    data['place'] = this.place;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+class Complaint {
+  final int id;
+  final User user;
+  final User masafr;
+  final String related_trip;
+  final String related_chat;
+  final String related_request_service;
+  final String status;
+  final bool solved;
+  final int user_negative;
+  final int masafrNegative;
+  final int complainant;
+  final String reason;
+  String created_at;
+
+
+  Complaint(
+      {
+        this.id,
+        this.user,
+        this.masafr,
+        this.related_trip,
+        this.related_request_service,
+        this.status,
+        this.solved,
+        this.user_negative,
+        this.masafrNegative,
+        this.complainant,
+        this.reason,
+        this.created_at,
+        this.related_chat
+      });
+
+  factory Complaint.fromMap(Map map) {
+    return Complaint(
+        id: map["id"],
+        user: User.fromJson(map["user"]),
+        masafr: User.forChat(int.parse(map["masafr_id"]), "", "", "", ""),
+        complainant: int.parse(map["complainant"]),
+        masafrNegative: int.parse(map["masafr_negative"]),
+        reason: map["reason"],
+        created_at: map["created_at"],
+        related_request_service: map["related_request_service"],
+        related_trip: map["related_trip"],
+        related_chat: map["related_chat"],
+        status: map["status"],
+        solved: map["solved"] == "1" ? true : false,
+        user_negative: int.parse( map["masafr_negative"])
+
+    );
+  }
+
+  static List<Complaint> toList(List data) => data.map((chatRoomMap) => Complaint.fromMap(chatRoomMap)).toList();
+}
+
+class ComplaintRoom {
+  int id;
+  String senderType;
+  String subject;
+  String chat_id;
+  User mosafer;
+  User client;
+
+  ComplaintRoom({this.id, this.senderType,this.subject,this.chat_id,this.mosafer,this.client,});
+  static List<ComplaintRoom> toList(List data) => data.map((chatRoomMap) => ComplaintRoom.fromMap(chatRoomMap)).toList();
+  factory ComplaintRoom.fromMap(Map map) {
+    return ComplaintRoom(
+        id: map["id"],
+        mosafer: map["mosafer"],
+        client: map["user"],
+        chat_id: map["chat_id"],
+        subject: map["subject"],
+        senderType: map["sender_type"]
+    );
+  }
+
 }

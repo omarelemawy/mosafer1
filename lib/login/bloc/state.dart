@@ -19,6 +19,14 @@ class RegisterGetCar3ImageState extends LoginStates{}
 class RegisterGetCar4ImageState extends LoginStates{}
 class RegisterGetCar5ImageState extends LoginStates{}
 
+
+class AddMoreInformOfMosaferLoadingStates extends LoginStates{}
+class AddMoreInformOfMosaferSuccessStates extends LoginStates{}
+class AddMoreInformOfMosaferErrorStates extends LoginStates{
+  String error;
+  AddMoreInformOfMosaferErrorStates(this.error);
+}
+
 class SendCodeLoadingState extends LoginStates{}
 
 class SendCodeSuccessState extends LoginStates{}

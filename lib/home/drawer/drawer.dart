@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/drawer/profile_page.dart';
+import 'package:mosafer1/home/drawer/terms_and_policies.dart';
 import 'package:mosafer1/home/homeScreen.dart';
 import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
+
+import 'customer_service.dart';
+import 'free_service.dart';
 
 class MyDrawer extends StatelessWidget {
 
@@ -92,112 +96,141 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 30,),
-          GestureDetector(
-            onTap: (){
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen())
-                  , (route) => false);
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10,),
-                Icon(Icons.home,color: HexColor("#638462"),),
-                SizedBox(width: 10,),
-                Text("الصفحه الرئيسية",style: TextStyle(color: HexColor("#638462"),
-                    fontWeight: FontWeight.bold,fontSize: 18),),
-                Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
-              ],
+          ListTile(
+            title: GestureDetector(
+              onTap: (){
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen())
+                    , (route) => false);
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Icon(Icons.home,color: HexColor("#638462"),),
+                  SizedBox(width: 10,),
+                  Text("الصفحه الرئيسية",style: TextStyle(color: HexColor("#638462"),
+                      fontWeight: FontWeight.bold,fontSize: 18),),
+                  Spacer(),
+                  Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 30,),
-          GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder:
-                  (context)=>ProfilePage()));
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10,),
-                Icon(Icons.person,color: HexColor("#638462"),),
-                SizedBox(width: 10,),
-                Text("الصفحةالشخصية",style: TextStyle(color: HexColor("#638462"),
-                    fontWeight: FontWeight.bold,fontSize: 18),),
-                Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
-              ],
+          CacheHelper.getData(key: "token")!=null?
+          ListTile(
+            title: GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder:
+                    (context)=>ProfilePage()));
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Icon(Icons.person,color: HexColor("#638462"),),
+                  SizedBox(width: 10,),
+                  Text("الصفحةالشخصية",style: TextStyle(color: HexColor("#638462"),
+                      fontWeight: FontWeight.bold,fontSize: 18),),
+                  Spacer(),
+                  Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                ],
+              ),
+            ),
+          ):SizedBox(),
+          ListTile(
+            title: GestureDetector(
+              onTap: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CustomerService()));
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Icon(Icons.mail_outline,color: HexColor("#638462"),),
+                  SizedBox(width: 10,),
+                  Text("خدمة العملاء",style: TextStyle(color: HexColor("#638462"),
+                      fontWeight: FontWeight.bold,fontSize: 18),),
+                  Spacer(),
+                  Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 30,),
-          GestureDetector(
-            onTap: (){
-              /*Navigator.push(context, MaterialPageRoute(builder:
-                  (context)=>EdartElmshare()));*/
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10,),
-                Icon(Icons.mail_outline,color: HexColor("#638462"),),
-                SizedBox(width: 10,),
-                Text("خدمة العملاء",style: TextStyle(color: HexColor("#638462"),
-                    fontWeight: FontWeight.bold,fontSize: 18),),
-                Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
-              ],
+          ListTile(
+            title: GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder:
+                    (context)=>TermsAndPolicies()));
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Icon(Icons.rule_outlined,color: HexColor("#638462"),),
+                  SizedBox(width: 10,),
+                  Text("الشروط والسياسة",style: TextStyle(color: HexColor("#638462"),
+                      fontWeight: FontWeight.bold,fontSize: 18),),
+                  Spacer(),
+                  Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 30,),
-          GestureDetector(
-            onTap: (){
-              /*Navigator.push(context, MaterialPageRoute(builder:
-                  (context)=>EdartElmshare()));*/
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10,),
-                Icon(Icons.rule_outlined,color: HexColor("#638462"),),
-                SizedBox(width: 10,),
-                Text("الشروط والسياسة",style: TextStyle(color: HexColor("#638462"),
-                    fontWeight: FontWeight.bold,fontSize: 18),),
-                Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
-              ],
+          CacheHelper.getData(key: "token")!=null?ListTile(
+            leading: Icon(
+              Icons.mail_outline,
+              color: HexColor("#638462"),
             ),
-          ),
-          SizedBox(height: 30,),
-          CacheHelper.getData(key: "token")==null?GestureDetector(
-            onTap: (){
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
-                  (context)=>LoginScreen()),(c)=>false);
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10,),
-                Icon(Icons.login,color: HexColor("#638462"),),
-                SizedBox(width: 10,),
-                Text("دخول التطبيق",style: TextStyle(color: HexColor("#638462"),
-                    fontWeight: FontWeight.bold,fontSize: 18),),
-                Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
-              ],
+            title: Text(
+              "خدمات مجانية",
+              style: TextStyle(
+                  color: HexColor("#638462"),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
+            trailing: Icon(
+              Icons.chevron_right_rounded,
+              color: HexColor("#638462"),
+            ),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => FreeServiceScreen())),
+          ):
+          SizedBox(),
+          CacheHelper.getData(key: "token")==null?
+          ListTile(
+            title: GestureDetector(
+              onTap: (){
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
+                    (context)=>LoginScreen()),(c)=>false);
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Icon(Icons.login,color: HexColor("#638462"),),
+                  SizedBox(width: 10,),
+                  Text("دخول التطبيق",style: TextStyle(color: HexColor("#638462"),
+                      fontWeight: FontWeight.bold,fontSize: 18),),
+                  Spacer(),
+                  Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                ],
+              ),
             ),
           ):
-          GestureDetector(
-            onTap: (){
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
-                  (context)=>LoginScreen()),(c)=>false);
-              CacheHelper.removeData(key: "token");
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10,),
-                Icon(Icons.logout,color: HexColor("#638462"),),
-                SizedBox(width: 10,),
-                Text("خروج من التطبيق",style: TextStyle(color: HexColor("#638462"),
-                    fontWeight: FontWeight.bold,fontSize: 18),),
-                Spacer(),
-                Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
-              ],
+          ListTile(
+            title: GestureDetector(
+              onTap: (){
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
+                    (context)=>LoginScreen()),(c)=>false);
+                CacheHelper.removeData(key: "token");
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Icon(Icons.logout,color: HexColor("#638462"),),
+                  SizedBox(width: 10,),
+                  Text("خروج من التطبيق",style: TextStyle(color: HexColor("#638462"),
+                      fontWeight: FontWeight.bold,fontSize: 18),),
+                  Spacer(),
+                  Icon(Icons.chevron_right_rounded,color: HexColor("#638462"),),
+                ],
+              ),
             ),
           ),
         ],

@@ -14,7 +14,8 @@ class HttpOps {
 
   Future<GetAllRequestServicesModel> postData(
       {String endPoint, Map mapData, bool auth = true}) async {
-    http.Response response = await http.post(Uri.parse(mainUrl + endPoint), body: json.encode(mapData), headers: auth ?  { "authToken": _token } : {});
+    http.Response response = await http.post(Uri.parse(mainUrl + endPoint),
+        body: mapData, headers: auth ?  { "authToken": _token } : {});
     print("Response data ${response.body}");
     return GetAllRequestServicesModel.fromJson(json.decode(response.body));
   }

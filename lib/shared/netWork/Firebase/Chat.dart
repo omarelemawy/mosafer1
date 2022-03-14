@@ -13,18 +13,22 @@ class ChatData {
   FirebaseStorage storage = FirebaseStorage.instance;
 
   HttpOps _httpOps = HttpOps();
-  Stream<QuerySnapshot> chatRoomStream(String chatRoomId) => _firestore.collection("ChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
+  Stream<QuerySnapshot> chatRoomStream(var chatRoomId) => _firestore.collection("ChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
 
-  Future sendMessage({String chatRoomId , Message message}) async {
+  Future sendMessage({var chatRoomId , Message message,bool isComplaint = false}) async {
     String imgUrl = "";
     if(message.messageImage.isNotEmpty) {
       var uuid = Uuid().v1();
-      Reference ref = storage.ref('$chatRoomId/$uuid.jpg');
+      Reference ref = storage.ref(
+          isComplaint ? 'complaintsRef/$chatRoomId/$uuid.jpg' : '$chatRoomId/$uuid.jpg'
+      );
       TaskSnapshot taskSnapshot = await ref.putFile(File(message.messageImage)) ;
       imgUrl = await taskSnapshot.ref.getDownloadURL();
     }
     message.messageImage = imgUrl;
-    await _firestore.collection("ChatRooms/$chatRoomId/Messages").add(message.toMap());
+    await _firestore.collection(
+        isComplaint ? "ComplaintChatRooms/$chatRoomId/Messages" : "ChatRooms/$chatRoomId/Messages"
+    ).add(message.toMap());
     print("Sent");
   }
 
@@ -35,16 +39,18 @@ class ChatData {
     print(responseModel);
     return ChatRoom.toList(responseModel.dataObj['data']);
   }
-
-  Future<int> getOrCreateChatRoom(int userId,int msaferId) async {
+  Stream<QuerySnapshot> complainChatRoomStream(var chatRoomId) =>
+      _firestore.collection("ComplaintChatRooms/$chatRoomId/Messages").orderBy("time",descending: false).snapshots();
+  Future<int> getOrCreateChatRoom(int masafrId,int userId,related_trip) async {
 
     Map data  = {
-      "paginateCount" : 10,
-      "user_id" : userId,
-      "masafr_id" : msaferId
+      "user_id" : userId.toString(),
+      "masafr_id" : masafrId.toString(),
+      "related_request_service":related_trip.toString()
     };
-
-    GetAllRequestServicesModel responseModel = await _httpOps.postData(endPoint: createChatRoom,auth: true , mapData: data);
+     print(data);
+    GetAllRequestServicesModel responseModel = await _httpOps.postData(endPoint: createChatRoom,
+        auth: true , mapData: data);
     return responseModel.dataObj != null ? responseModel.dataObj as int : 0;
 
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mosafer1/home/first_screen/chat_nav/MessengerPage/ChatMessengerScreen.dart';
-import 'package:mosafer1/login/login.dart';
 import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Constats.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
@@ -12,15 +10,17 @@ import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
-class TravelDetailsPage extends StatefulWidget {
-  final RequestServices requestServices;
+import '../my_trip_from_chat_room.dart';
 
-  const TravelDetailsPage({Key key, this.requestServices}) : super(key: key);
+class RequestServiceFromChatPage extends StatefulWidget {
+  final RequestServices requestServices;
+  final int chatRoomsid;
+  const RequestServiceFromChatPage({Key key, this.requestServices,this.chatRoomsid}) : super(key: key);
   @override
   _TravelDetailsPageState createState() => _TravelDetailsPageState();
 }
 
-class _TravelDetailsPageState extends State<TravelDetailsPage> {
+class _TravelDetailsPageState extends State<RequestServiceFromChatPage> {
   List<MapLatLng> polylinePoints;
   Size size;
   ChatData _chatData = ChatData();
@@ -39,41 +39,7 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    return CacheHelper.getData(key: "token")==null?
-    Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("الخدمه"),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Go To Sing In First",style: TextStyle(color: HexColor("#A2B594"),
-                fontSize: 15,fontWeight: FontWeight.bold),),
-            SizedBox(height: 30,),
-            MaterialButton(
-              color: HexColor("#A2B594"),
-              onPressed: (){
-                /* pushNewScreen(
-                        context,
-                        screen: LoginScreen(),
-                        withNavBar: false, // OPTIONAL VALUE. True by default.
-                        pageTransitionAnimation: PageTransitionAnimation.scale,
-                      );*/
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context1)=>LoginScreen())
-                    , (route) => false);
-              },
-              child: Text("Go",style: TextStyle(color: Colors.white
-              ),),
-            )
-          ],
-        ),
-      ),
-    ):Scaffold(
+    return Scaffold(
       appBar: AppBar(
         leading: TextButton(
           child: Icon(
@@ -81,7 +47,8 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:  (context)=>ChatMessengerScreen
+              (chatRoomId:widget.chatRoomsid,)), (route) => false);
           },
         ),
       ),
@@ -89,50 +56,51 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
         alignment: Alignment.topRight,
         children: [
           FutureBuilder<List<Location>>(
-              future: getLocation(),
-              builder:  (context,snap) {
-                if(snap.hasData) {
-                  return SfMaps(
-                    layers: [
-                      MapTileLayer(
-                        initialFocalLatLng: MapLatLng(snap.data[0].latitude, snap.data[0].longitude),
-                        initialZoomLevel: 4,
-                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        sublayers: [
-                          MapPolylineLayer(
-                            polylines: Set.of([
-                              MapPolyline(
-                                points: polylinePoints,
-                              )
-                            ]),
-                          ),
-                        ],
-                        initialMarkersCount: 2,
-                        markerBuilder: (context, index) {
-                          if (index == 0) {
-                            return MapMarker(
-                                iconColor: Colors.white,
-                                iconStrokeColor: Colors.blue,
-                                iconStrokeWidth: 2,
-                                latitude: snap.data[0].latitude,
-                                longitude: snap.data[0].longitude);
-                          }
+            future: getLocation(),
+            builder:  (context,snap) {
+              if(snap.hasData) {
+                return SfMaps(
+                  layers: [
+                    MapTileLayer(
+                      initialFocalLatLng: MapLatLng(snap.data[0].latitude, snap.data[0].longitude),
+                      initialZoomLevel: 4,
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      sublayers: [
+                        MapPolylineLayer(
+                          polylines: Set.of([
+                            MapPolyline(
+                              points: polylinePoints,
+                            )
+                          ]),
+                        ),
+                      ],
+                      initialMarkersCount: 2,
+                      markerBuilder: (context, index) {
+                        if (index == 0) {
                           return MapMarker(
                               iconColor: Colors.white,
                               iconStrokeColor: Colors.blue,
                               iconStrokeWidth: 2,
-                              latitude:
-                              snap.data[1].latitude,
-                              longitude:
-                              snap.data[1].longitude);
-                        },
-                      ),
-                    ],
-                  );
-                }
-                return CircularProgressIndicator();
+                              latitude: snap.data[0].latitude,
+                              longitude: snap.data[0].longitude);
+                        }
+                        return MapMarker(
+                            iconColor: Colors.white,
+                            iconStrokeColor: Colors.blue,
+                            iconStrokeWidth: 2,
+                            latitude:
+                            snap.data[1].latitude,
+                            longitude:
+                            snap.data[1].longitude);
+                      },
+                    ),
+                  ],
+                );
               }
+              return Center(child: CircularProgressIndicator());
+            }
           ),
+
           Padding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -188,22 +156,13 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
               Padding(
                 child: ElevatedButton(onPressed: ()
                 {
-                  print(CacheHelper.getData(key: "id"));
-                  print(widget.requestServices.user.id);
-                  print(widget.requestServices.id);
-                  if(widget.requestServices.user != null && CacheHelper.getData(key: "id") != null){
-                    _chatData.getOrCreateChatRoom(CacheHelper.getData(key: "id"),
-                        widget.requestServices.user.id,widget.requestServices.id).then((value) {
-                      print("Chat room : ${value}");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatMessengerScreen(chatRoomId: value,)));
-                    });
-                  }
-                }, child: Text("تفاوض"),style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(MyTheme.mainAppColor),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyTripFromChatRoom(chatRoomId: widget.chatRoomsid,)));
+                }, child: Text("تفاوض مع رحلة من رحلاتي"),style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(MyTheme.mainAppColor),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
                 ),),
                 padding: const EdgeInsets.all(15),
               ),
@@ -309,7 +268,8 @@ class _TravelDetailsPageState extends State<TravelDetailsPage> {
                               itemCount: 5,
                               itemBuilder: (context,index)=> Container(
                                 child: ClipRRect(
-                                  child: FadeInImage.assetNetwork(placeholder: placeholder2, image: 'https://www.iihs.org/api/ratings/model-year-images/3112/636/',),
+                                  child: FadeInImage.assetNetwork(placeholder: placeholder2,
+                                    image: 'https://www.iihs.org/api/ratings/model-year-images/3112/636/',),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 decoration: BoxDecoration(

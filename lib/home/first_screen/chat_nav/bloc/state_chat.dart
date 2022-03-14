@@ -19,3 +19,9 @@ class NewMessage extends ChatStates {
 class NoMessageChatStates extends ChatStates{}
 
 class NewImageState extends ChatStates{}
+class GetLoadingChatRequestServicesStates extends ChatStates{}
+class GetSuccessChatRequestServicesStates extends ChatStates{}
+class GetErrorChatRequestServicesStates extends ChatStates{
+  String error;
+  GetErrorChatRequestServicesStates(this.error);
+}

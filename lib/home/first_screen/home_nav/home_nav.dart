@@ -57,7 +57,7 @@ class _HomeNavState extends State<HomeNav> {
                                             placeholderCacheHeight: 80,
                                             placeholderCacheWidth: 80,
                                             placeholder: "assets/man.png",
-                                            image: allRequestsSe[index].photo,
+                                            image: allRequestsSe[index].user.photo,
                                             imageErrorBuilder: (context,o,c)=>ClipOval(
                                               child: Image.asset(
                                                 "assets/man.png",
@@ -162,11 +162,12 @@ class _HomeNavState extends State<HomeNav> {
                                       ),
                                       Row(
                                         children: [
-                                          Icon(Icons.timer),
+                                          Icon(Icons.timer,size: 15,),
                                           SizedBox(width: 5,),
                                           Text("ينتهي الطلب خلال",
                                             style: TextStyle(fontFamily: "beIN",
                                                 fontWeight: FontWeight.bold,
+                                                fontSize: 13,
                                                 color:HexColor("#707070")
                                             ),),
                                           Spacer(),
@@ -186,7 +187,7 @@ class _HomeNavState extends State<HomeNav> {
                                                     children: [
                                                       Text(
                                                         "يوم",
-                                                        style: TextStyle(fontSize: 12),
+                                                        style: TextStyle(fontSize: 11),
                                                       ),
                                                       CircleAvatar(
                                                         child: FittedBox(
@@ -198,21 +199,21 @@ class _HomeNavState extends State<HomeNav> {
                                                         ),
                                                         backgroundColor: MyTheme.mainAppColor
                                                             .withOpacity(0.6),
-                                                        radius: 14,
+                                                        radius: 12,
                                                       ),
                                                     ],
                                                   ),
                                                   const SizedBox(
-                                                    width: 4,
+                                                    width: 2,
                                                   ),
                                                   Column(
                                                     children: [
                                                       Text(
                                                         "ساعة",
-                                                        style: TextStyle(fontSize: 12),
+                                                        style: TextStyle(fontSize: 11),
                                                       ),
                                                       CircleAvatar(
-                                                        radius: 14,
+                                                        radius: 12,
                                                         child: FittedBox(
                                                           child: Text(
                                                             "${time.hours}",
@@ -226,16 +227,16 @@ class _HomeNavState extends State<HomeNav> {
                                                     ],
                                                   ),
                                                   const SizedBox(
-                                                    width: 4,
+                                                    width: 2,
                                                   ),
                                                   Column(
                                                     children: [
                                                       Text(
                                                         "دقيقة",
-                                                        style: TextStyle(fontSize: 12),
+                                                        style: TextStyle(fontSize: 11),
                                                       ),
                                                       CircleAvatar(
-                                                        radius: 14,
+                                                        radius: 12,
                                                         child: FittedBox(
                                                           child: Text(
                                                             "${time.min}",
@@ -249,16 +250,16 @@ class _HomeNavState extends State<HomeNav> {
                                                     ],
                                                   ),
                                                   const SizedBox(
-                                                    width: 4,
+                                                    width: 2,
                                                   ),
                                                   Column(
                                                     children: [
                                                       Text(
                                                         "ثانية",
-                                                        style: TextStyle(fontSize: 12),
+                                                        style: TextStyle(fontSize: 11),
                                                       ),
                                                       CircleAvatar(
-                                                        radius: 14,
+                                                        radius: 12,
                                                         child: FittedBox(
                                                           child: Text(
                                                             "${time.sec}",

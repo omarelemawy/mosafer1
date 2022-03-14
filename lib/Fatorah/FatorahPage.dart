@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mosafer1/Fatorah/bloc/cubit.dart';
 import 'package:mosafer1/Fatorah/bloc/state.dart';
-import 'package:mosafer1/home/first_screen/chat_nav/bloc/state_chat.dart';
+import 'package:mosafer1/model/all-request-services.dart';
 import 'package:mosafer1/shared/Utils.dart';
 import 'package:mosafer1/shared/Widgets/FatoragShape.dart';
 import 'package:mosafer1/shared/Widgets/SVGIcons.dart';
@@ -14,6 +14,8 @@ import 'AddServiceWidget.dart';
 
 class FatorahPage extends StatelessWidget {
   bool _checked = false;
+  int chatRoomId ;
+  FatorahPage(this.chatRoomId);
   @override
   Widget build(BuildContext context) {
     final FatorahCubit fatorahCubit = BlocProvider.of<FatorahCubit>(context);
@@ -194,7 +196,7 @@ class FatorahPage extends StatelessWidget {
                                                       .headline2),
                                           Spacer(),
                                           Text(
-                                              "${fatorahCubit.totalPrice} " +
+                                              "${fatorahCubit.totalPrice+55+55} " +
                                                   "ر.س ",
                                               style:
                                                   MyTheme.defaultAppTextTheme()
@@ -267,11 +269,13 @@ class FatorahPage extends StatelessWidget {
                       onPressed: !(state is InitialFatorahState) &&
                               fatorahCubit.fatorahValidation()
                           ? () {
-                        fatorahCubit.createNewFatorah(chatId: 1);
-                        Navigator.pop(context,true);
+                        fatorahCubit.createNewFatorah(chatId: chatRoomId).then((value) {
+                          Navigator.pop(context,value);
+                        });
+
                       }
                           : null,
-                      child: Text("ارسل الفاتورة"),
+                      child: Text("ارسل الفاتورة",style: TextStyle(color: Colors.white),),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(MyTheme.mainAppColor),
