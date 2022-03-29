@@ -197,7 +197,7 @@ class AddTrip extends StatelessWidget {
           children: [
             subsectionsString.length == 0 ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
-              child: Text("No Subsections"),
+              child: Text("لا توجد أقسام فرعية"),
             ) : Container(
               height: 200,
               color: Colors.white,
@@ -218,7 +218,7 @@ class AddTrip extends StatelessWidget {
                 );
               },
               color: HexColor("#90AC7A"),
-              child: Text("Send", style: TextStyle(color: Colors.white),),
+              child: Text("ارسال", style: TextStyle(color: Colors.white),),
             )
           ],
         ),

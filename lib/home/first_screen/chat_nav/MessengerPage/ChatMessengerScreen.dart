@@ -361,7 +361,7 @@ class _ChatMessengerScreenState extends State<ChatMessengerScreen> {
                                             onPressed: () async {
                                               FatorahService request = await Navigator.push(context,
                                                   MaterialPageRoute(builder: (context) => FatorahPage(widget.chatRoomId)));
-                                              if(request != null){
+                                              if(request.subject != null){
                                                 print("Request : ${request}");
                                                 if(request.subject.isNotEmpty){
                                                   Message msg = Message(

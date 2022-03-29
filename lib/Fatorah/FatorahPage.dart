@@ -29,6 +29,9 @@ class FatorahPage extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
+
+              fatorahCubit.totalServicesMap== {"0" : {"price" : "0", "serviceName" : ""}};
+              fatorahCubit.addServicesList=[AddService()];
               fatorahCubit.emit(InitialFatorahState());
               Navigator.pop(context);
             },
@@ -232,6 +235,8 @@ class FatorahPage extends StatelessWidget {
                       Align(
                         child: ElevatedButton(
                           onPressed: () {
+                            fatorahCubit.totalServicesMap== {"0" : {"price" : "0", "serviceName" : ""}};
+                            fatorahCubit.addServicesList=[AddService()];
                             fatorahCubit.emit(InitialFatorahState());
                             Navigator.pop(context);
                           },
@@ -266,13 +271,12 @@ class FatorahPage extends StatelessWidget {
                   listener: (context, state) {},
                   builder: (context, state) {
                     return ElevatedButton(
-                      onPressed: !(state is InitialFatorahState) &&
-                              fatorahCubit.fatorahValidation()
+                      onPressed:fatorahCubit.fatorahValidation()
                           ? () {
-                        fatorahCubit.createNewFatorah(chatId: chatRoomId).then((value) {
+                        fatorahCubit.calculateTotalServicesPrice();
+                        fatorahCubit.createNewFatorah(chatId: chatRoomId,context:context).then((value) {
                           Navigator.pop(context,value);
                         });
-
                       }
                           : null,
                       child: Text("ارسل الفاتورة",style: TextStyle(color: Colors.white),),

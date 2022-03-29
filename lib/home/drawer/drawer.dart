@@ -61,6 +61,8 @@ class MyDrawer extends StatelessWidget {
                           child: FadeInImage.assetNetwork(
                             height: 80,
                             width: 80,
+                            placeholderFit: BoxFit.fill,
+                            fit: BoxFit.fill,
                             placeholderCacheHeight: 80,
                             placeholderCacheWidth: 80,
                             placeholder: "assets/man.png",

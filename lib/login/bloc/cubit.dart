@@ -108,7 +108,7 @@ class LoginBloc extends Cubit<LoginStates>{
       if (data["status"] == true) {
         print(value);
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:
-            (context)=>VerificationMessage(email))
+            (context)=>VerificationMessage(data["masafr id"]))
             , (route) => false);
         emit(RegisterSuccessState());
       }
@@ -126,19 +126,24 @@ class LoginBloc extends Cubit<LoginStates>{
     character = value;
     emit(ChangeGenderRegisterState());
   }
-  Future<http.StreamedResponse> sendCode(email,context,code) async {
+  Future<http.StreamedResponse> sendCode(id,context,code) async {
+
     emit(SendCodeLoadingState());
     Map<String, String> postBody = {
-      'email': email,
-      'code': code
+      "type" : "1",
+      "id": id.toString(),
+      "code" : code.toString()
     };
-    var APIURL = Uri.parse('https://chefkhalil.com/api/register/2');
+    print(postBody);
+    var APIURL = Uri.parse('https://msafr.we-work.pro/api/masafr/varify-account');
     var request =  http.MultipartRequest("POST", APIURL);
     request.fields.addAll(postBody);
     http.StreamedResponse response = await request.send();
     response.stream.transform(utf8.decoder).listen((value) {
+
       var data = jsonDecode(value);
-      if (data["msg"] == "User Data has been updated ! ") {
+      print(data);
+      if (data["status"] == true) {
         emit(SendCodeSuccessState());
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context)=>LoginScreen()),

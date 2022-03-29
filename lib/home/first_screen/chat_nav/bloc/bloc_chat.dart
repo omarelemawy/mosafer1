@@ -99,7 +99,7 @@ class ChatBloc extends Cubit<ChatStates> {
   Future<String> createComplaint({int chat_id,context}) async {
     var data = {
       "subject": "he take money5 from me i'am user",
-      "chat_id":chat_id,
+      "chat_id":chat_id.toString(),
     };
     GetAllRequestServicesModel responseModel = await _httpOps.postData(endPoint:
     CreateComplaintsRoomUrl,auth: true , mapData: data);

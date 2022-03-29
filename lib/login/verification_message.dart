@@ -8,7 +8,7 @@ import 'bloc/state.dart';
 
 class VerificationMessage extends StatelessWidget {
 
-  String email;
+  int email;
   VerificationMessage(this.email);
   final GlobalKey<ScaffoldState> keyScaffold = GlobalKey<ScaffoldState>();
   TextEditingController numController = TextEditingController();
@@ -93,10 +93,11 @@ class VerificationMessage extends StatelessWidget {
                                           highlightColor: Colors.blue,
                                           defaultBorderColor: Colors.black,
                                           hasTextBorderColor: Colors.green,
-                                          highlightPinBoxColor: HexColor("#649A3A"),
-                                          pinBoxWidth: 50,
-                                          pinBoxHeight: 64,
+                                          highlightPinBoxColor: Colors.white,
+                                          pinBoxWidth: 35,
+                                          pinBoxHeight: 60,
                                           hasUnderline: true,
+                                          pinBoxColor: Colors.white,
                                           wrapAlignment: WrapAlignment.spaceAround,
                                           pinBoxDecoration:
                                           ProvidedPinBoxDecoration.defaultPinBoxDecoration,
@@ -108,9 +109,9 @@ class VerificationMessage extends StatelessWidget {
                                           Duration(milliseconds: 200),
 //                    highlightAnimation: true,
                                           highlightAnimationBeginColor: Colors.black,
-                                          highlightAnimationEndColor: Colors.white12,
+                                          highlightAnimationEndColor: Colors.white,
                                           keyboardType: TextInputType.number,
-                                          maxLength: 5,
+                                          maxLength: 6,
                                         ),
                                       ),
                                       SizedBox(height: 20,),

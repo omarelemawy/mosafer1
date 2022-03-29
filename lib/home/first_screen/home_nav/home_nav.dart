@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mosafer1/MosaferProfile/MosaferProfilePage.dart';
 import 'package:mosafer1/Travel/TravelDetails.dart';
 import 'package:mosafer1/home/first_screen/home_nav/cubit/home_cubit.dart';
 import 'package:mosafer1/home/first_screen/home_nav/cubit/home_state.dart';
 import 'package:mosafer1/model/all-request-services.dart';
+import 'package:mosafer1/shared/netWork/local/cache_helper.dart';
 import 'package:mosafer1/shared/styles/thems.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -34,7 +36,8 @@ class _HomeNavState extends State<HomeNav> {
               body: state is GetLoadingAllRequestServicesStates?
               Center(child: CircularProgressIndicator()):Padding(
                 padding: const EdgeInsets.only(bottom: 20.0,top: 10,right: 10,left: 10),
-                child: ListView.separated(itemBuilder: (context,index)=>
+                child: allRequestsSe.isNotEmpty?
+                  ListView.separated(itemBuilder: (context,index)=>
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -50,24 +53,38 @@ class _HomeNavState extends State<HomeNav> {
                                     Stack(
                                       alignment: Alignment.bottomRight,
                                       children: [
-                                        ClipOval(
-                                          child: FadeInImage.assetNetwork(
-                                            height: 80,
-                                            width: 80,
-                                            placeholderCacheHeight: 80,
-                                            placeholderCacheWidth: 80,
-                                            placeholder: "assets/man.png",
-                                            image: allRequestsSe[index].user.photo,
-                                            imageErrorBuilder: (context,o,c)=>ClipOval(
-                                              child: Image.asset(
-                                                "assets/man.png",
-                                                height: 80,
-                                                width: 80,
+                                        GestureDetector(
+                                          onTap:  CacheHelper.getData(key: "token")==null?null:(){
+                                            pushNewScreen(
+                                              context,
+                                              screen: MosaferProfilePage(allRequestsSe[index].user.id),
+                                              withNavBar: false, // OPTIONAL VALUE. True by default.
+                                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                                            );
+
+                                          },
+                                          child: ClipOval(
+                                            child: FadeInImage.assetNetwork(
+                                              height: 80,
+                                              width: 80,
+                                              fit: BoxFit.fill,
+                                              placeholderFit:BoxFit.fill,
+                                              placeholderCacheHeight: 80,
+                                              placeholderCacheWidth: 80,
+                                              placeholder: "assets/man.png",
+                                              image: allRequestsSe[index].user.photo,
+                                              imageErrorBuilder: (context,o,c)=>ClipOval(
+                                                child: Image.asset(
+                                                  "assets/man.png",
+                                                  fit: BoxFit.fill,
+                                                  height: 80,
+                                                  width: 80,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                       allRequestsSe[index].user.isVerified=="1"?
+                                        allRequestsSe[index].user.isVerified=="1"?
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: CircleAvatar(
@@ -346,7 +363,7 @@ class _HomeNavState extends State<HomeNav> {
                   separatorBuilder: (BuildContext context, int index) {
                     return SizedBox(height: 20,);
                   },
-                ),
+                ):Center(child: Text("لا يوجد خدمات",style: TextStyle(fontSize: 20),)),
               ),
             ),
           );
